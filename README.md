@@ -1,25 +1,42 @@
 # BAPI - Benue AgriPrice Insight
 
-## Project Title
-Web-Based Agricultural Market Price Monitoring and Analysis System for Benue State
-
-## Refined Academic Title
+## Official Project Title
 Design and Implementation of a Web-Based Agricultural Market Price Monitoring and Analysis System for Benue State
 
-## Project Summary
-BAPI is a web-based decision-support system for monitoring, analyzing, and forecasting agricultural market prices across selected markets in Benue State, Nigeria. The system focuses on eight key commodities and four representative markets: Makurdi, Gboko, Zaki Biam, and Otukpo.
+## Short Description
+BAPI is a web-based agricultural market price monitoring and analysis system designed for Benue State, Nigeria. It supports structured historical data storage, weekly price updates, visual analytics, rule-based insight generation, and optional short-term forecasting for selected commodities across selected markets.
 
-The platform is intentionally scoped for academic rigor, explainability, and successful delivery within a final-year project timeline. It supports historical and weekly price monitoring through manual entry and CSV import, then builds upward into rule-based analysis, visual insights, and optional machine learning forecasting.
+## Problem Context
+Agricultural producers, traders, and public-sector decision-makers often rely on fragmented and informal price information. In practice, this weakens bargaining power, slows response to unusual market shifts, and makes it difficult to compare local markets over time. BAPI addresses this problem by providing a focused, explainable, and academically defendable information system for monitoring commodity prices within a tightly defined local scope.
+
+## Project Aim
+To design and implement a web-based agricultural market price monitoring and analysis system for Benue State that captures historical and weekly agricultural market prices, supports comparison across selected markets, generates explainable analytical insights, and optionally provides short-term price forecasts.
+
+## Core Objectives
+1. Provide a reliable platform for recording historical and weekly agricultural commodity prices.
+2. Support data entry through admin manual entry and CSV import.
+3. Visualize price changes across time, commodities, and markets.
+4. Generate explainable rule-based insights such as trends, alerts, market comparisons, and seasonality summaries.
+5. Support optional forecasting as an enhancement, not as the foundation of the system.
+6. Maintain a scope that is realistic for a final-year project and strong enough for academic defense.
 
 ## Locked Scope
-- State coverage: Benue State only
+- Geographic scope: Benue State only
 - Markets: Makurdi, Gboko, Zaki Biam, Otukpo
 - Commodities: Yam, Cassava, Rice, Maize, Beans, Soybean, Millet, Sorghum
-- Data collection: historical records plus weekly updates
-- Data entry mode: admin CSV import and manual entry only
 - Users: Admin and Viewer/Farmer
-- Analysis focus: trends, alerts, seasonality, market comparison, state average, optional forecasting
-- Exclusions: no real-time scraping, no IoT sensors, no mobile app
+- Data capture method: manual weekly entry and CSV import
+- Analysis coverage: historical analysis, weekly monitoring, trend detection, alerts, seasonality insight, market comparison, state averages, optional forecasting
+
+## Explicitly Out of Scope
+- Real-time web scraping
+- IoT sensors or embedded hardware collection
+- Native mobile application
+- Expansion to all Nigerian states
+- Autonomous decision-making without explainable logic
+
+## Academic Positioning
+This project is intentionally scoped for feasibility, explainability, and technical defensibility. The system is useful even without machine learning because rule-based analytics provide immediate value. Forecasting is added only as an optional enhancement after the monitoring and analytics foundation is complete.
 
 ## Locked Technology Stack
 - Frontend: React 18, Vite, TypeScript, Tailwind CSS v4, Recharts, React Router v7, TanStack Query, Lucide React
@@ -27,49 +44,66 @@ The platform is intentionally scoped for academic rigor, explainability, and suc
 - AI/ML: Python 3.11, FastAPI, pandas, scikit-learn, Prophet, joblib
 - Deployment: Docker Compose
 
-## Development Philosophy
-1. Build the full system without AI/ML first.
-2. Add explainable rule-based analysis and alerts.
-3. Add forecasting logic.
-4. Add optional ML enhancement for academic strength.
-5. Polish the UI, documentation, and defense narrative.
-
-## Visual Direction
+## Visual System
 - Primary: Evergreen `#0F3A2F`
 - Accent: Jade `#34C9A2`
 - Secondary: Mint `#A1E8C8`
-- Background: Soft natural cream `#F8F7F2`
-- Background treatment: gentle forest-inspired gradients with subtle low-opacity grid lines
+- Background: Soft cream `#F8F7F2`
+- Background treatment: subtle grid-line pattern with low-opacity forest-inspired gradients
+- Brand: BAPI - Benue AgriPrice Insight
 
-## Phase Status
-- Phase 0: Project definition, academic framing, and repo setup
+## Development Philosophy
+1. Make the system work fully without AI/ML.
+2. Add rule-based analysis and explainable alerts.
+3. Introduce forecasting logic.
+4. Add optional ML enhancement for academic value.
+5. Polish the interface, report artifacts, and defense narrative.
+
+## Documentation Map
+- `docs/academic`: academic framing, requirements, use cases, report prelim pages
+- `docs/architecture`: repository structure, system architecture, ERD, API boundaries, analysis rules
+- `docs/branding`: brand and logo specification
+- `docs/meetings`: supervisor meeting records
+- `docs/references`: manual follow-up instructions for assets or details that cannot be finalized directly in Markdown
 
 ## Repository Layout
 ```text
 apps/
-  api/            # Express + TypeScript backend
+  api/            # Express backend
   ml/             # FastAPI forecasting microservice
-  web/            # React + Vite frontend
+  web/            # React frontend
 data/
   processed/      # cleaned or transformed datasets
-  raw/            # imported CSV files and source datasets
+  raw/            # source CSV files and curated input data
 docs/
-  academic/       # defense-facing academic documentation
-  architecture/   # diagrams, ERD, and design notes
-  branding/       # logo brief and visual system
+  academic/       # defense-facing academic documents
+  architecture/   # technical design and diagrams
+  branding/       # logo and visual identity notes
+  meetings/       # supervisor meeting records
+  references/     # manual action trackers and external asset notes
 packages/
   config/         # shared configuration
-  ui/             # shared UI tokens/components if needed later
+  ui/             # shared UI tokens or utilities if needed later
 prisma/
-  migrations/     # Prisma migration history
-scripts/          # utilities, seed helpers, import helpers
-tests/            # integration and system-level tests
+  migrations/     # migration history
+scripts/          # helper scripts, imports, seeds
+tests/            # integration and end-to-end tests later
 ```
 
-## Quick Start
-This phase only establishes the project foundation and documentation. Environment setup, Docker, app initialization, and database work begin in later phases.
+## Phase Status
+- Phase 0 completed: project definition, academic framing, repo setup
+- Phase 1 completed: requirements analysis, system design, ERD, architecture
+- Phase 2 onward: implementation and dataset preparation phases continue incrementally
 
-## Authoring Notes
-- Keep all logic explainable and defendable.
-- Prefer service-layer architecture and strong typing.
-- Do not expand beyond the approved project scope.
+## Current Setup Expectations
+This repository currently emphasizes project documentation and structure. Environment setup, app bootstrapping, database modeling, APIs, forecasting service wiring, and frontend implementation will be added in later phases.
+
+## Engineering Rules
+- Prefer TypeScript across frontend and backend.
+- Keep business logic in service layers.
+- Keep analytics explainable with both numbers and human-readable reasons.
+- Keep forecasting separate from observed historical values.
+- Keep the project inside the approved scope at all times.
+
+## Personal Actions Required
+Some project artifacts cannot be finalized directly in the repository at this stage, including final logo graphics, polished report diagrams, screenshots, institutional prelim-page wording, and personal details. See `docs/references/document-edit-actions.md` for the complete checklist of manual actions required later.
