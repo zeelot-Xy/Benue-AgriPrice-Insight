@@ -1,0 +1,129 @@
+market_code,commodity_slug,price_date,price,unit,source_note
+MKD,yam,2026-02-02,2850.00,tuber,Sample curated dataset for Phase 2
+GBK,yam,2026-02-02,2720.00,tuber,Sample curated dataset for Phase 2
+ZKB,yam,2026-02-02,2650.00,tuber,Sample curated dataset for Phase 2
+OTK,yam,2026-02-02,2780.00,tuber,Sample curated dataset for Phase 2
+MKD,cassava,2026-02-02,18200.00,100kg bag,Sample curated dataset for Phase 2
+GBK,cassava,2026-02-02,17600.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,cassava,2026-02-02,17100.00,100kg bag,Sample curated dataset for Phase 2
+OTK,cassava,2026-02-02,17900.00,100kg bag,Sample curated dataset for Phase 2
+MKD,rice,2026-02-02,46800.00,50kg bag,Sample curated dataset for Phase 2
+GBK,rice,2026-02-02,45900.00,50kg bag,Sample curated dataset for Phase 2
+ZKB,rice,2026-02-02,45200.00,50kg bag,Sample curated dataset for Phase 2
+OTK,rice,2026-02-02,46300.00,50kg bag,Sample curated dataset for Phase 2
+MKD,maize,2026-02-02,39800.00,100kg bag,Sample curated dataset for Phase 2
+GBK,maize,2026-02-02,38900.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,maize,2026-02-02,38200.00,100kg bag,Sample curated dataset for Phase 2
+OTK,maize,2026-02-02,39100.00,100kg bag,Sample curated dataset for Phase 2
+MKD,beans,2026-02-02,61200.00,100kg bag,Sample curated dataset for Phase 2
+GBK,beans,2026-02-02,60100.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,beans,2026-02-02,59300.00,100kg bag,Sample curated dataset for Phase 2
+OTK,beans,2026-02-02,60600.00,100kg bag,Sample curated dataset for Phase 2
+MKD,soybean,2026-02-02,47400.00,100kg bag,Sample curated dataset for Phase 2
+GBK,soybean,2026-02-02,46600.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,soybean,2026-02-02,45800.00,100kg bag,Sample curated dataset for Phase 2
+OTK,soybean,2026-02-02,46900.00,100kg bag,Sample curated dataset for Phase 2
+MKD,millet,2026-02-02,35400.00,100kg bag,Sample curated dataset for Phase 2
+GBK,millet,2026-02-02,34800.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,millet,2026-02-02,34300.00,100kg bag,Sample curated dataset for Phase 2
+OTK,millet,2026-02-02,35000.00,100kg bag,Sample curated dataset for Phase 2
+MKD,sorghum,2026-02-02,33600.00,100kg bag,Sample curated dataset for Phase 2
+GBK,sorghum,2026-02-02,32900.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,sorghum,2026-02-02,32400.00,100kg bag,Sample curated dataset for Phase 2
+OTK,sorghum,2026-02-02,33100.00,100kg bag,Sample curated dataset for Phase 2
+MKD,yam,2026-02-09,2920.00,tuber,Sample curated dataset for Phase 2
+GBK,yam,2026-02-09,2780.00,tuber,Sample curated dataset for Phase 2
+ZKB,yam,2026-02-09,2710.00,tuber,Sample curated dataset for Phase 2
+OTK,yam,2026-02-09,2840.00,tuber,Sample curated dataset for Phase 2
+MKD,cassava,2026-02-09,18450.00,100kg bag,Sample curated dataset for Phase 2
+GBK,cassava,2026-02-09,17820.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,cassava,2026-02-09,17320.00,100kg bag,Sample curated dataset for Phase 2
+OTK,cassava,2026-02-09,18120.00,100kg bag,Sample curated dataset for Phase 2
+MKD,rice,2026-02-09,47100.00,50kg bag,Sample curated dataset for Phase 2
+GBK,rice,2026-02-09,46200.00,50kg bag,Sample curated dataset for Phase 2
+ZKB,rice,2026-02-09,45450.00,50kg bag,Sample curated dataset for Phase 2
+OTK,rice,2026-02-09,46600.00,50kg bag,Sample curated dataset for Phase 2
+MKD,maize,2026-02-09,40400.00,100kg bag,Sample curated dataset for Phase 2
+GBK,maize,2026-02-09,39450.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,maize,2026-02-09,38700.00,100kg bag,Sample curated dataset for Phase 2
+OTK,maize,2026-02-09,39650.00,100kg bag,Sample curated dataset for Phase 2
+MKD,beans,2026-02-09,61800.00,100kg bag,Sample curated dataset for Phase 2
+GBK,beans,2026-02-09,60650.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,beans,2026-02-09,59850.00,100kg bag,Sample curated dataset for Phase 2
+OTK,beans,2026-02-09,61150.00,100kg bag,Sample curated dataset for Phase 2
+MKD,soybean,2026-02-09,47800.00,100kg bag,Sample curated dataset for Phase 2
+GBK,soybean,2026-02-09,46950.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,soybean,2026-02-09,46150.00,100kg bag,Sample curated dataset for Phase 2
+OTK,soybean,2026-02-09,47300.00,100kg bag,Sample curated dataset for Phase 2
+MKD,millet,2026-02-09,35900.00,100kg bag,Sample curated dataset for Phase 2
+GBK,millet,2026-02-09,35200.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,millet,2026-02-09,34750.00,100kg bag,Sample curated dataset for Phase 2
+OTK,millet,2026-02-09,35500.00,100kg bag,Sample curated dataset for Phase 2
+MKD,sorghum,2026-02-09,34000.00,100kg bag,Sample curated dataset for Phase 2
+GBK,sorghum,2026-02-09,33350.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,sorghum,2026-02-09,32800.00,100kg bag,Sample curated dataset for Phase 2
+OTK,sorghum,2026-02-09,33550.00,100kg bag,Sample curated dataset for Phase 2
+MKD,yam,2026-02-16,3010.00,tuber,Sample curated dataset for Phase 2
+GBK,yam,2026-02-16,2860.00,tuber,Sample curated dataset for Phase 2
+ZKB,yam,2026-02-16,2790.00,tuber,Sample curated dataset for Phase 2
+OTK,yam,2026-02-16,2910.00,tuber,Sample curated dataset for Phase 2
+MKD,cassava,2026-02-16,18800.00,100kg bag,Sample curated dataset for Phase 2
+GBK,cassava,2026-02-16,18100.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,cassava,2026-02-16,17620.00,100kg bag,Sample curated dataset for Phase 2
+OTK,cassava,2026-02-16,18450.00,100kg bag,Sample curated dataset for Phase 2
+MKD,rice,2026-02-16,47500.00,50kg bag,Sample curated dataset for Phase 2
+GBK,rice,2026-02-16,46600.00,50kg bag,Sample curated dataset for Phase 2
+ZKB,rice,2026-02-16,45850.00,50kg bag,Sample curated dataset for Phase 2
+OTK,rice,2026-02-16,47000.00,50kg bag,Sample curated dataset for Phase 2
+MKD,maize,2026-02-16,40950.00,100kg bag,Sample curated dataset for Phase 2
+GBK,maize,2026-02-16,39950.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,maize,2026-02-16,39200.00,100kg bag,Sample curated dataset for Phase 2
+OTK,maize,2026-02-16,40150.00,100kg bag,Sample curated dataset for Phase 2
+MKD,beans,2026-02-16,62400.00,100kg bag,Sample curated dataset for Phase 2
+GBK,beans,2026-02-16,61350.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,beans,2026-02-16,60450.00,100kg bag,Sample curated dataset for Phase 2
+OTK,beans,2026-02-16,61700.00,100kg bag,Sample curated dataset for Phase 2
+MKD,soybean,2026-02-16,48200.00,100kg bag,Sample curated dataset for Phase 2
+GBK,soybean,2026-02-16,47400.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,soybean,2026-02-16,46600.00,100kg bag,Sample curated dataset for Phase 2
+OTK,soybean,2026-02-16,47750.00,100kg bag,Sample curated dataset for Phase 2
+MKD,millet,2026-02-16,36400.00,100kg bag,Sample curated dataset for Phase 2
+GBK,millet,2026-02-16,35750.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,millet,2026-02-16,35200.00,100kg bag,Sample curated dataset for Phase 2
+OTK,millet,2026-02-16,36000.00,100kg bag,Sample curated dataset for Phase 2
+MKD,sorghum,2026-02-16,34400.00,100kg bag,Sample curated dataset for Phase 2
+GBK,sorghum,2026-02-16,33750.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,sorghum,2026-02-16,33200.00,100kg bag,Sample curated dataset for Phase 2
+OTK,sorghum,2026-02-16,33950.00,100kg bag,Sample curated dataset for Phase 2
+MKD,yam,2026-02-23,3090.00,tuber,Sample curated dataset for Phase 2
+GBK,yam,2026-02-23,2940.00,tuber,Sample curated dataset for Phase 2
+ZKB,yam,2026-02-23,2870.00,tuber,Sample curated dataset for Phase 2
+OTK,yam,2026-02-23,2990.00,tuber,Sample curated dataset for Phase 2
+MKD,cassava,2026-02-23,19150.00,100kg bag,Sample curated dataset for Phase 2
+GBK,cassava,2026-02-23,18420.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,cassava,2026-02-23,17950.00,100kg bag,Sample curated dataset for Phase 2
+OTK,cassava,2026-02-23,18750.00,100kg bag,Sample curated dataset for Phase 2
+MKD,rice,2026-02-23,47900.00,50kg bag,Sample curated dataset for Phase 2
+GBK,rice,2026-02-23,47000.00,50kg bag,Sample curated dataset for Phase 2
+ZKB,rice,2026-02-23,46200.00,50kg bag,Sample curated dataset for Phase 2
+OTK,rice,2026-02-23,47400.00,50kg bag,Sample curated dataset for Phase 2
+MKD,maize,2026-02-23,41200.00,100kg bag,Sample curated dataset for Phase 2
+GBK,maize,2026-02-23,40300.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,maize,2026-02-23,39550.00,100kg bag,Sample curated dataset for Phase 2
+OTK,maize,2026-02-23,40500.00,100kg bag,Sample curated dataset for Phase 2
+MKD,beans,2026-02-23,63100.00,100kg bag,Sample curated dataset for Phase 2
+GBK,beans,2026-02-23,61950.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,beans,2026-02-23,61100.00,100kg bag,Sample curated dataset for Phase 2
+OTK,beans,2026-02-23,62450.00,100kg bag,Sample curated dataset for Phase 2
+MKD,soybean,2026-02-23,48600.00,100kg bag,Sample curated dataset for Phase 2
+GBK,soybean,2026-02-23,47800.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,soybean,2026-02-23,47000.00,100kg bag,Sample curated dataset for Phase 2
+OTK,soybean,2026-02-23,48150.00,100kg bag,Sample curated dataset for Phase 2
+MKD,millet,2026-02-23,36900.00,100kg bag,Sample curated dataset for Phase 2
+GBK,millet,2026-02-23,36200.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,millet,2026-02-23,35700.00,100kg bag,Sample curated dataset for Phase 2
+OTK,millet,2026-02-23,36500.00,100kg bag,Sample curated dataset for Phase 2
+MKD,sorghum,2026-02-23,34900.00,100kg bag,Sample curated dataset for Phase 2
+GBK,sorghum,2026-02-23,34250.00,100kg bag,Sample curated dataset for Phase 2
+ZKB,sorghum,2026-02-23,33700.00,100kg bag,Sample curated dataset for Phase 2
+OTK,sorghum,2026-02-23,34450.00,100kg bag,Sample curated dataset for Phase 2
