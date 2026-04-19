@@ -1,0 +1,20 @@
+{
+  "name": "bapi-benue-agriprice-insight",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Monorepo for the Benue AgriPrice Insight final-year project.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "dev": "echo \"Phase 4 will introduce runnable app services.\"",
+    "build": "echo \"Phase 4 will introduce build pipelines.\"",
+    "lint": "echo \"Phase 4 will introduce linting.\"",
+    "test": "echo \"Phase 11 will introduce automated tests.\"",
+    "format": "echo \"Formatting toolchain will be added in a later phase.\""
+  }
+}
