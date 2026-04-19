@@ -1,0 +1,9 @@
+slug,name,default_unit,is_active
+yam,Yam,tuber,true
+cassava,Cassava,100kg bag,true
+rice,Rice,50kg bag,true
+maize,Maize,100kg bag,true
+beans,Beans,100kg bag,true
+soybean,Soybean,100kg bag,true
+millet,Millet,100kg bag,true
+sorghum,Sorghum,100kg bag,true
