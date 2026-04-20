@@ -1,9 +1,22 @@
+import { FormEvent, useState } from "react";
 import { ArrowRight, LockKeyhole, UserRound } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { BapiLogo } from "../components/brand/bapi-logo";
+import { useLogin } from "../hooks/use-phase9-data";
 
 export function LoginPage() {
+  const navigate = useNavigate();
+  const login = useLogin();
+  const [email, setEmail] = useState("admin@bapi.local");
+  const [password, setPassword] = useState("BapiAdmin123!");
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    await login.mutateAsync({ email, password });
+    void navigate("/admin");
+  }
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-bapi-cream text-bapi-evergreen">
       <div className="bapi-background" />
@@ -30,12 +43,17 @@ export function LoginPage() {
           <section className="glass-panel rounded-[2.2rem] p-6 md:p-8">
             <p className="text-xs uppercase tracking-[0.28em] text-bapi-jade">Sign In</p>
             <h2 className="mt-4 font-display text-3xl">Welcome back to BAPI</h2>
-            <div className="mt-8 grid gap-4">
+            <form className="mt-8 grid gap-4" onSubmit={handleSubmit}>
               <label className="grid gap-2 text-sm">
                 <span>Email</span>
                 <div className="flex items-center gap-3 rounded-[1.4rem] border border-white/60 bg-white/70 px-4 py-3">
                   <UserRound className="h-4 w-4 text-bapi-evergreen/45" />
-                  <input className="w-full bg-transparent outline-none placeholder:text-bapi-evergreen/35" placeholder="admin@bapi.local" />
+                  <input
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    className="w-full bg-transparent outline-none placeholder:text-bapi-evergreen/35"
+                    placeholder="admin@bapi.local"
+                  />
                 </div>
               </label>
               <label className="grid gap-2 text-sm">
@@ -44,23 +62,31 @@ export function LoginPage() {
                   <LockKeyhole className="h-4 w-4 text-bapi-evergreen/45" />
                   <input
                     type="password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
                     className="w-full bg-transparent outline-none placeholder:text-bapi-evergreen/35"
                     placeholder="Phase 10 will connect this form"
                   />
                 </div>
               </label>
               <button
-                type="button"
+                type="submit"
                 className="mt-2 inline-flex items-center justify-center gap-2 rounded-[1.4rem] bg-bapi-evergreen px-5 py-4 text-sm font-semibold text-white shadow-soft transition hover:bg-bapi-evergreen/92"
+                disabled={login.isPending}
               >
-                Continue to dashboard
+                {login.isPending ? "Signing in..." : "Continue to dashboard"}
                 <ArrowRight className="h-4 w-4" />
               </button>
-            </div>
+            </form>
 
             <p className="mt-5 text-sm leading-6 text-bapi-evergreen/62">
-              Authentication wiring is scheduled for frontend-backend integration. For now, this screen establishes the final visual tone and UX direction.
+              Phase 10 connects this form to the backend auth endpoint using the seeded demo admin account by default.
             </p>
+            {login.error ? (
+              <p className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-700">
+                {login.error.message}
+              </p>
+            ) : null}
 
             <Link to="/" className="mt-8 inline-flex text-sm font-semibold text-bapi-jade underline-offset-4 hover:underline">
               Preview the dashboard shell

@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
+import { useCurrentUser, useLogout } from "../../hooks/use-phase9-data";
 import { BapiLogo } from "../brand/bapi-logo";
 
 const navigation = [
@@ -21,6 +22,9 @@ const navigation = [
 ];
 
 export function AppShell({ children }: PropsWithChildren) {
+  const { data: currentUser } = useCurrentUser();
+  const logout = useLogout();
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-bapi-cream text-bapi-evergreen">
       <div className="bapi-background" />
@@ -102,15 +106,24 @@ export function AppShell({ children }: PropsWithChildren) {
 
             <div className="grid gap-3 rounded-[1.6rem] border border-white/50 bg-white/55 px-4 py-3 text-sm text-bapi-evergreen/72 md:min-w-[280px]">
               <div className="flex items-center justify-between gap-3">
-                <span>Viewer mode</span>
+                <span>{currentUser ? currentUser.role : "Viewer mode"}</span>
                 <span className="rounded-full bg-bapi-jade/15 px-3 py-1 text-xs font-semibold text-bapi-jade">
-                  Demo Ready
+                  {currentUser ? currentUser.fullName : "Demo Ready"}
                 </span>
               </div>
               <div className="flex items-center justify-between gap-3">
                 <span>Forecast layer</span>
                 <span>Phase 8 wired</span>
               </div>
+              {currentUser ? (
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="rounded-full bg-bapi-evergreen px-3 py-2 text-xs font-semibold text-white"
+                >
+                  Sign out
+                </button>
+              ) : null}
             </div>
           </header>
 

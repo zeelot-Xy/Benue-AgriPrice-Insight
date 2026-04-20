@@ -1,14 +1,30 @@
 import { ShieldCheck, Upload, WandSparkles } from "lucide-react";
 
+import { QueryState } from "../components/ui/query-state";
 import { SectionCard } from "../components/ui/section-card";
 import { StatusPill } from "../components/ui/status-pill";
-import { useAdminData } from "../hooks/use-phase9-data";
+import { useAdminData, useCurrentUser } from "../hooks/use-phase9-data";
 
 export function AdminPage() {
-  const { data } = useAdminData();
+  const { data, isLoading } = useAdminData();
+  const { data: currentUser } = useCurrentUser();
+
+  if (isLoading) {
+    return (
+      <QueryState
+        title="Loading Admin Workspace"
+        description="Fetching live overview counts and scope metadata from the backend."
+      />
+    );
+  }
 
   if (!data) {
-    return null;
+    return (
+      <QueryState
+        title="Admin Workspace Unavailable"
+        description="No admin summary could be prepared for this screen."
+      />
+    );
   }
 
   return (
@@ -17,6 +33,11 @@ export function AdminPage() {
         eyebrow="Admin Workspace"
         title="Controlled data management for demo-safe operations"
         description="The admin interface is intentionally framed around manual entry and CSV import, which keeps the project realistic and defendable."
+        action={
+          <StatusPill tone={data.source === "live" ? "jade" : "mint"}>
+            {data.source === "live" ? "Live Summary" : "Fallback Summary"}
+          </StatusPill>
+        }
       >
         <div className="grid gap-4 xl:grid-cols-[1fr_1.1fr]">
           <div className="grid gap-3">
@@ -42,11 +63,15 @@ export function AdminPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-bapi-evergreen">Access Control</h3>
-                  <p className="text-sm text-bapi-evergreen/68">Admin writes, viewer reads.</p>
+                  <p className="text-sm text-bapi-evergreen/68">
+                    {currentUser
+                      ? `${currentUser.fullName} is authenticated as ${currentUser.role}.`
+                      : "Admin writes, viewer reads. Sign in to activate protected actions."}
+                  </p>
                 </div>
               </div>
               <p className="mt-4 text-sm leading-6 text-bapi-evergreen/68">
-                This view is prepared for JWT-protected backend actions that will be connected in the next phase.
+                {data.note}
               </p>
             </article>
           </div>
@@ -59,7 +84,9 @@ export function AdminPage() {
                   Keep the data clean and the scope controlled.
                 </h3>
               </div>
-              <StatusPill tone="mint">Phase 10 Ready</StatusPill>
+              <StatusPill tone="mint">
+                {data.scopeSummary.markets} Markets / {data.scopeSummary.commodities} Commodities
+              </StatusPill>
             </div>
 
             <div className="mt-5 grid gap-3">
