@@ -1,14 +1,29 @@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
+import { QueryState } from "../components/ui/query-state";
 import { SectionCard } from "../components/ui/section-card";
 import { StatusPill } from "../components/ui/status-pill";
 import { useMarketData } from "../hooks/use-phase9-data";
 
 export function MarketsPage() {
-  const { data } = useMarketData();
+  const { data, isLoading } = useMarketData();
+
+  if (isLoading) {
+    return (
+      <QueryState
+        title="Loading Markets"
+        description="Fetching approved market records and comparison data from the backend."
+      />
+    );
+  }
 
   if (!data) {
-    return null;
+    return (
+      <QueryState
+        title="Markets Unavailable"
+        description="The markets view could not prepare any data."
+      />
+    );
   }
 
   return (
@@ -17,6 +32,11 @@ export function MarketsPage() {
         eyebrow="Selected Markets"
         title="The four representative Benue markets in the project scope"
         description="Each market card keeps the scope explicit and helps the final-year project avoid uncontrolled expansion."
+        action={
+          <StatusPill tone={data.source === "live" ? "jade" : "mint"}>
+            {data.source === "live" ? "Live Markets" : "Fallback Demo"}
+          </StatusPill>
+        }
       >
         <div className="grid gap-4 lg:grid-cols-2">
           {data.marketCards.map((market) => (
@@ -59,7 +79,7 @@ export function MarketsPage() {
         <SectionCard
           eyebrow="Seasonality Notes"
           title="Monthly explainers that stay readable"
-          description="These notes preview the kind of textual interpretation that will sit beside charts and metrics in the finished dashboard."
+          description={`${data.note} These notes preview the kind of textual interpretation that will sit beside charts and metrics in the finished dashboard.`}
         >
           <div className="grid gap-3">
             {data.seasonalityInsights.map((item) => (

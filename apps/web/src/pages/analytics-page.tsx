@@ -1,14 +1,29 @@
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
+import { QueryState } from "../components/ui/query-state";
 import { SectionCard } from "../components/ui/section-card";
 import { StatusPill } from "../components/ui/status-pill";
 import { useAnalyticsData } from "../hooks/use-phase9-data";
 
 export function AnalyticsPage() {
-  const { data } = useAnalyticsData();
+  const { data, isLoading } = useAnalyticsData();
+
+  if (isLoading) {
+    return (
+      <QueryState
+        title="Loading Analytics"
+        description="Fetching live alerts, seasonality summaries, and selected price history."
+      />
+    );
+  }
 
   if (!data) {
-    return null;
+    return (
+      <QueryState
+        title="Analytics Unavailable"
+        description="No analytics data could be prepared for this screen."
+      />
+    );
   }
 
   return (
@@ -17,6 +32,11 @@ export function AnalyticsPage() {
         eyebrow="Trend Detection"
         title="Explainable movement using weekly observed records"
         description="This page emphasizes the analytical story before machine learning: trend thresholds, alert conditions, and seasonal interpretation remain readable by non-technical users."
+        action={
+          <StatusPill tone={data.source === "live" ? "jade" : "mint"}>
+            {data.source === "live" ? "Live Analytics" : "Fallback Demo"}
+          </StatusPill>
+        }
       >
         <div className="h-[320px]">
           <ResponsiveContainer width="100%" height="100%">
@@ -31,7 +51,13 @@ export function AnalyticsPage() {
               <XAxis dataKey="week" stroke="rgba(15,58,47,0.55)" />
               <YAxis stroke="rgba(15,58,47,0.55)" />
               <Tooltip />
-              <Area type="monotone" dataKey="maize" stroke="#34c9a2" fill="url(#maizeFill)" strokeWidth={3} />
+              <Area
+                type="monotone"
+                dataKey="maize"
+                stroke="#34c9a2"
+                fill="url(#maizeFill)"
+                strokeWidth={3}
+              />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -62,7 +88,7 @@ export function AnalyticsPage() {
         <SectionCard
           eyebrow="Monthly Reading"
           title="Seasonality interpretation cards"
-          description="The UI keeps textual interpretation beside visual evidence so the dashboard remains useful even for users who do not rely only on charts."
+          description={`${data.note} The UI keeps textual interpretation beside visual evidence so the dashboard remains useful even for users who do not rely only on charts.`}
         >
           <div className="grid gap-3">
             {data.seasonalityInsights.map((item) => (

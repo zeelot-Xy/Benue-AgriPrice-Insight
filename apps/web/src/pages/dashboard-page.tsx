@@ -18,15 +18,30 @@ import {
 } from "recharts";
 
 import { MetricCard } from "../components/ui/metric-card";
+import { QueryState } from "../components/ui/query-state";
 import { SectionCard } from "../components/ui/section-card";
 import { StatusPill } from "../components/ui/status-pill";
 import { useDashboardData } from "../hooks/use-phase9-data";
 
 export function DashboardPage() {
-  const { data } = useDashboardData();
+  const { data, isLoading } = useDashboardData();
+
+  if (isLoading) {
+    return (
+      <QueryState
+        title="Loading Dashboard"
+        description="Fetching reports, alert summaries, and recent price records from the BAPI backend."
+      />
+    );
+  }
 
   if (!data) {
-    return null;
+    return (
+      <QueryState
+        title="Dashboard Unavailable"
+        description="No dashboard data could be prepared for this view."
+      />
+    );
   }
 
   return (
@@ -63,7 +78,11 @@ export function DashboardPage() {
           eyebrow="Weekly Movement"
           title="Commodity trajectory across recent weekly entries"
           description="This view is designed for fast comparison of key commodity price movement and will connect directly to the price-record API in Phase 10."
-          action={<StatusPill tone="mint">Mock Query Layer</StatusPill>}
+          action={
+            <StatusPill tone={data.source === "live" ? "jade" : "mint"}>
+              {data.source === "live" ? "Live Backend" : "Fallback Demo"}
+            </StatusPill>
+          }
         >
           <div className="h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -102,7 +121,7 @@ export function DashboardPage() {
           <div className="mt-5 rounded-[1.6rem] border border-bapi-jade/20 bg-[linear-gradient(135deg,rgba(52,201,162,0.12),rgba(161,232,200,0.1))] p-4">
             <p className="text-xs uppercase tracking-[0.26em] text-bapi-jade">Build Status</p>
             <p className="mt-3 text-sm leading-6 text-bapi-evergreen/70">
-              {data.phase9Notes.uiStatus} {data.phase9Notes.integrationStatus}
+              {data.note} {data.phase9Notes.uiStatus} {data.phase9Notes.integrationStatus}
             </p>
           </div>
         </SectionCard>

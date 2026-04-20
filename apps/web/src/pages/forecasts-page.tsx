@@ -10,15 +10,30 @@ import {
   YAxis,
 } from "recharts";
 
+import { QueryState } from "../components/ui/query-state";
 import { SectionCard } from "../components/ui/section-card";
 import { StatusPill } from "../components/ui/status-pill";
 import { useForecastData } from "../hooks/use-phase9-data";
 
 export function ForecastsPage() {
-  const { data } = useForecastData();
+  const { data, isLoading } = useForecastData();
+
+  if (isLoading) {
+    return (
+      <QueryState
+        title="Loading Forecasts"
+        description="Preparing the selected forecast scenario from the backend and ML service."
+      />
+    );
+  }
 
   if (!data) {
-    return null;
+    return (
+      <QueryState
+        title="Forecasts Unavailable"
+        description="No forecast data could be prepared for this screen."
+      />
+    );
   }
 
   return (
@@ -27,7 +42,11 @@ export function ForecastsPage() {
         eyebrow="Forecast Overview"
         title="Short-term projection with a clear separation from actual prices"
         description="This screen is intentionally explicit that forecasting is advisory. It sits on top of historical monitoring, not in place of it."
-        action={<StatusPill tone="evergreen">Prophet Ready</StatusPill>}
+        action={
+          <StatusPill tone={data.source === "live" ? "evergreen" : "mint"}>
+            {data.source === "live" ? "Live Forecast" : "Fallback Forecast"}
+          </StatusPill>
+        }
       >
         <div className="grid gap-4 xl:grid-cols-[1.4fr_0.9fr]">
           <div className="h-[340px] rounded-[1.7rem] border border-white/55 bg-white/55 p-3">
@@ -73,8 +92,13 @@ export function ForecastsPage() {
             <article className="rounded-[1.6rem] border border-white/55 bg-white/60 p-5">
               <p className="text-xs uppercase tracking-[0.24em] text-bapi-jade">Confidence Note</p>
               <p className="mt-3 text-sm leading-6 text-bapi-evergreen/68">
-                With limited weekly history, forecast confidence should be treated as moderate and used to support discussion, not automatic decisions.
+                {data.forecastMeta.explanation}
               </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <StatusPill tone="jade">{data.forecastMeta.market}</StatusPill>
+                <StatusPill tone="mint">{data.forecastMeta.commodity}</StatusPill>
+                <StatusPill tone="amber">{data.forecastMeta.confidenceLabel}</StatusPill>
+              </div>
             </article>
           </div>
         </div>
