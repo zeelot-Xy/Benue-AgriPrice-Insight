@@ -1,12 +1,19 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
+  authenticate,
   getAdminData,
   getAnalyticsData,
+  getCurrentUser,
   getDashboardData,
   getForecastData,
   getMarketData,
-} from "../services/mock-api";
+} from "../services/bapi-api";
+import {
+  clearStoredToken,
+  getStoredToken,
+  setStoredToken,
+} from "../lib/auth-storage";
 
 export function useDashboardData() {
   return useQuery({
@@ -41,4 +48,35 @@ export function useAdminData() {
     queryKey: ["admin-data"],
     queryFn: getAdminData,
   });
+}
+
+export function useCurrentUser() {
+  return useQuery({
+    queryKey: ["current-user"],
+    queryFn: getCurrentUser,
+    enabled: Boolean(getStoredToken()),
+    retry: false,
+  });
+}
+
+export function useLogin() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: authenticate,
+    onSuccess: (result) => {
+      setStoredToken(result.token);
+      void queryClient.invalidateQueries({ queryKey: ["current-user"] });
+      void queryClient.invalidateQueries();
+    },
+  });
+}
+
+export function useLogout() {
+  const queryClient = useQueryClient();
+
+  return () => {
+    clearStoredToken();
+    void queryClient.invalidateQueries();
+  };
 }
