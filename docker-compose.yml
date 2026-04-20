@@ -27,11 +27,15 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       JWT_SECRET: ${JWT_SECRET}
       CORS_ORIGIN: http://localhost:${WEB_PORT:-5173}
+      ML_SERVICE_BASE_URL: http://ml:8001
+      ML_FORECAST_TIMEOUT_MS: ${ML_FORECAST_TIMEOUT_MS:-8000}
     ports:
       - "${API_PORT:-8000}:8000"
     depends_on:
       postgres:
         condition: service_healthy
+      ml:
+        condition: service_started
 
   web:
     build:

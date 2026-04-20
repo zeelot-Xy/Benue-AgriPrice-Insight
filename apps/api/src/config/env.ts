@@ -12,4 +12,6 @@ export const env = {
   JWT_SECRET: process.env.JWT_SECRET!,
   CORS_ORIGIN: process.env.CORS_ORIGIN ?? "http://localhost:5173",
   SEED_ADMIN_PASSWORD: process.env.SEED_ADMIN_PASSWORD ?? "BapiAdmin123!",
+  ML_SERVICE_BASE_URL: process.env.ML_SERVICE_BASE_URL ?? "http://localhost:8001",
+  ML_FORECAST_TIMEOUT_MS: Number(process.env.ML_FORECAST_TIMEOUT_MS ?? 8000),
 };
