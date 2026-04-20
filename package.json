@@ -11,10 +11,18 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "dev": "echo \"Phase 4 will introduce runnable app services.\"",
-    "build": "echo \"Phase 4 will introduce build pipelines.\"",
-    "lint": "echo \"Phase 4 will introduce linting.\"",
-    "test": "echo \"Phase 11 will introduce automated tests.\"",
-    "format": "echo \"Formatting toolchain will be added in a later phase.\""
+    "dev:web": "npm run dev --workspace apps/web",
+    "dev:api": "npm run dev --workspace apps/api",
+    "dev:ml": "python -m uvicorn main:app --host 0.0.0.0 --port 8001 --reload --app-dir apps/ml",
+    "build:web": "npm run build --workspace apps/web",
+    "build:api": "npm run build --workspace apps/api",
+    "build": "npm run build:web && npm run build:api",
+    "lint:web": "npm run lint --workspace apps/web",
+    "lint:api": "npm run lint --workspace apps/api",
+    "lint": "npm run lint:web && npm run lint:api",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "typecheck:web": "npm run typecheck --workspace apps/web",
+    "typecheck:api": "npm run typecheck --workspace apps/api"
   }
 }
