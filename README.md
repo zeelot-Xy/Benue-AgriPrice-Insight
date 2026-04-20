@@ -96,7 +96,9 @@ tests/            # integration and end-to-end tests later
 - Phase 1 completed: requirements analysis, system design, ERD, architecture
 - Phase 2 completed: dataset strategy and sample data preparation
 - Phase 3 completed: Git workflow discipline and monorepo governance
-- Phase 4 onward: environment setup and implementation phases continue incrementally
+- Phase 4 completed: local environment setup and service bootstrapping
+- Phase 5 completed: database modeling with Prisma schema and seed foundation
+- Phase 6 onward: backend implementation and integration phases continue incrementally
 
 ## Current Setup Expectations
 This repository currently emphasizes project documentation and structure. Environment setup, app bootstrapping, database modeling, APIs, forecasting service wiring, and frontend implementation will be added in later phases.
