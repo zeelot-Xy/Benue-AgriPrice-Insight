@@ -23,6 +23,14 @@
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "typecheck:web": "npm run typecheck --workspace apps/web",
-    "typecheck:api": "npm run typecheck --workspace apps/api"
+    "typecheck:api": "npm run typecheck --workspace apps/api",
+    "prisma:generate": "prisma generate",
+    "prisma:validate": "prisma validate",
+    "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:seed": "tsx prisma/seed.ts"
+  },
+  "devDependencies": {
+    "prisma": "^6.6.0",
+    "tsx": "^4.19.4"
   }
 }
