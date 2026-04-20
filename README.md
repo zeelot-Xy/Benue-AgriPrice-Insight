@@ -65,6 +65,7 @@ This project is intentionally scoped for feasibility, explainability, and techni
 - `docs/branding`: brand and logo specification
 - `docs/meetings`: supervisor meeting records
 - `docs/references`: manual follow-up instructions for assets or details that cannot be finalized directly in Markdown
+- `CONTRIBUTING.md`: Git workflow discipline, branch strategy, and commit conventions
 
 ## Repository Layout
 ```text
@@ -93,7 +94,9 @@ tests/            # integration and end-to-end tests later
 ## Phase Status
 - Phase 0 completed: project definition, academic framing, repo setup
 - Phase 1 completed: requirements analysis, system design, ERD, architecture
-- Phase 2 onward: implementation and dataset preparation phases continue incrementally
+- Phase 2 completed: dataset strategy and sample data preparation
+- Phase 3 completed: Git workflow discipline and monorepo governance
+- Phase 4 onward: environment setup and implementation phases continue incrementally
 
 ## Current Setup Expectations
 This repository currently emphasizes project documentation and structure. Environment setup, app bootstrapping, database modeling, APIs, forecasting service wiring, and frontend implementation will be added in later phases.
