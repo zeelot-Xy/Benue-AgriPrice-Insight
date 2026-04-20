@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import bcrypt from "bcryptjs";
 import {
   ImportStatus,
   PrismaClient,
@@ -38,6 +39,9 @@ async function main() {
   const commodities = parseCsv(path.join(rawDir, "commodities.csv"));
   const priceRecords = parseCsv(path.join(rawDir, "price_records_sample.csv"));
 
+  const seedAdminPassword = process.env.SEED_ADMIN_PASSWORD ?? "BapiAdmin123!";
+  const passwordHash = await bcrypt.hash(seedAdminPassword, 10);
+
   const adminRole = await prisma.role.upsert({
     where: { name: RoleName.ADMIN },
     update: {},
@@ -52,11 +56,13 @@ async function main() {
 
   const adminUser = await prisma.user.upsert({
     where: { email: "admin@bapi.local" },
-    update: {},
+    update: {
+      passwordHash,
+    },
     create: {
       fullName: "BAPI Seed Admin",
       email: "admin@bapi.local",
-      passwordHash: "seed-placeholder-hash-change-before-real-auth",
+      passwordHash,
       roleId: adminRole.id,
       isActive: true,
     },
@@ -150,6 +156,7 @@ async function main() {
   console.log(
     `Seeded roles, admin user, ${markets.length} markets, ${commodities.length} commodities, and ${priceRecords.length} price records.`,
   );
+  console.log(`Seed admin login: admin@bapi.local / ${seedAdminPassword}`);
 }
 
 main()

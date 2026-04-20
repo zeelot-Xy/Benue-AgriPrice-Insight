@@ -29,6 +29,7 @@ Use root npm scripts for frontend and backend, and the Python uvicorn command fo
 - `POSTGRES_PASSWORD`
 - `JWT_SECRET`
 - `CORS_ORIGIN`
+- `SEED_ADMIN_PASSWORD`
 - `VITE_API_BASE_URL`
 
 ## Current Scope of This Phase
@@ -42,3 +43,4 @@ This phase introduces only bootstrapping and health endpoints. It does not yet i
 ## Personal Actions Required
 - Copy `.env.example` to `.env` before running the stack locally later.
 - Install Node and Python dependencies locally if you want non-Docker development in addition to Docker Compose.
+- After database migration and seeding later, use the seed admin credentials from `.env` to test the auth endpoints.
