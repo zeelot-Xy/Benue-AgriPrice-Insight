@@ -1,3 +1,4 @@
+import { analyticsService } from "../analytics/analytics.service.js";
 import { prisma } from "../../lib/prisma.js";
 import { averageDecimal, serializePriceRecord } from "../../utils/serializers.js";
 
@@ -11,9 +12,7 @@ export const reportsService = {
         prisma.priceRecord.findFirst({
           orderBy: { priceDate: "desc" },
         }),
-        prisma.alert.count({
-          where: { isActive: true },
-        }),
+        analyticsService.activeAlertCount(),
       ]);
 
     return {
