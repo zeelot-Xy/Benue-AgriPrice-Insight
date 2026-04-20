@@ -62,6 +62,7 @@ This project is intentionally scoped for feasibility, explainability, and techni
 ## Documentation Map
 - `docs/academic`: academic framing, requirements, use cases, report prelim pages
 - `docs/architecture`: repository structure, system architecture, ERD, API boundaries, analysis rules
+- `docs/architecture/backend-api-development.md`: implemented backend scope and route coverage
 - `docs/branding`: brand and logo specification
 - `docs/meetings`: supervisor meeting records
 - `docs/references`: manual follow-up instructions for assets or details that cannot be finalized directly in Markdown
@@ -98,7 +99,8 @@ tests/            # integration and end-to-end tests later
 - Phase 3 completed: Git workflow discipline and monorepo governance
 - Phase 4 completed: local environment setup and service bootstrapping
 - Phase 5 completed: database modeling with Prisma schema and seed foundation
-- Phase 6 onward: backend implementation and integration phases continue incrementally
+- Phase 6 completed: backend API development for auth, reference data, prices, and reports
+- Phase 7 onward: analytics and integration phases continue incrementally
 
 ## Current Setup Expectations
 This repository currently emphasizes project documentation and structure. Environment setup, app bootstrapping, database modeling, APIs, forecasting service wiring, and frontend implementation will be added in later phases.
