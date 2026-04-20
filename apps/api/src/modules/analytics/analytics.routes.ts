@@ -7,3 +7,6 @@ export const analyticsRouter = Router();
 
 analyticsRouter.get("/trends", asyncHandler(analyticsController.trends));
 analyticsRouter.get("/alerts", asyncHandler(analyticsController.alerts));
+analyticsRouter.get("/comparisons", asyncHandler(analyticsController.comparisons));
+analyticsRouter.get("/seasonality", asyncHandler(analyticsController.seasonality));
+analyticsRouter.get("/state-average", asyncHandler(analyticsController.stateAverage));

@@ -14,3 +14,12 @@ export const trendsQuerySchema = analyticsFilterSchema.extend({
 export const alertsQuerySchema = analyticsFilterSchema.extend({
   thresholdPercent: z.coerce.number().min(0).max(100).optional().default(10),
 });
+
+export const comparisonsQuerySchema = z.object({
+  commodityId: z.coerce.number().int().positive(),
+  priceDate: z.string().date().optional(),
+});
+
+export const seasonalityQuerySchema = analyticsFilterSchema;
+
+export const stateAverageQuerySchema = analyticsFilterSchema;
