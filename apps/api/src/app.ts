@@ -3,6 +3,7 @@ import express from "express";
 import helmet from "helmet";
 
 import { errorHandler, notFoundHandler } from "./middlewares/error-handler.js";
+import { analyticsRouter } from "./modules/analytics/analytics.routes.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
 import { commodityRouter } from "./modules/commodities/commodities.routes.js";
 import { marketRouter } from "./modules/markets/markets.routes.js";
@@ -37,6 +38,7 @@ export function createApp() {
   });
 
   app.use("/api/auth", authRouter);
+  app.use("/api/analytics", analyticsRouter);
   app.use("/api/markets", marketRouter);
   app.use("/api/commodities", commodityRouter);
   app.use("/api/prices", priceRouter);
