@@ -6,6 +6,7 @@ import { errorHandler, notFoundHandler } from "./middlewares/error-handler.js";
 import { analyticsRouter } from "./modules/analytics/analytics.routes.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
 import { commodityRouter } from "./modules/commodities/commodities.routes.js";
+import { forecastsRouter } from "./modules/forecasts/forecasts.routes.js";
 import { marketRouter } from "./modules/markets/markets.routes.js";
 import { priceRouter } from "./modules/prices/prices.routes.js";
 import { reportRouter } from "./modules/reports/reports.routes.js";
@@ -32,8 +33,9 @@ export function createApp() {
   app.get("/api", (_req, res) => {
     res.json({
       name: "BAPI Backend API",
-      phase: 6,
-      message: "Auth, reference data, price management, and report endpoints are available.",
+      phase: 8,
+      message:
+        "Auth, reference data, price management, analytics, reports, and forecasting endpoints are available.",
     });
   });
 
@@ -41,6 +43,7 @@ export function createApp() {
   app.use("/api/analytics", analyticsRouter);
   app.use("/api/markets", marketRouter);
   app.use("/api/commodities", commodityRouter);
+  app.use("/api/forecasts", forecastsRouter);
   app.use("/api/prices", priceRouter);
   app.use("/api/reports", reportRouter);
 
