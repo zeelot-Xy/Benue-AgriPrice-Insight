@@ -5,15 +5,21 @@ import { QueryState } from "../components/ui/query-state";
 import { SectionCard } from "../components/ui/section-card";
 import { StatusPill } from "../components/ui/status-pill";
 import {
+  useApproveSubmissionBatch,
   useAdminData,
   useCurrentUser,
   useImportPrices,
+  usePendingSubmissionBatches,
+  useRejectSubmissionBatch,
 } from "../hooks/use-phase9-data";
 
 export function AdminPage() {
   const { data, isLoading } = useAdminData();
   const { data: currentUser } = useCurrentUser();
+  const { data: pendingSubmissions } = usePendingSubmissionBatches();
   const importPrices = useImportPrices();
+  const approveSubmission = useApproveSubmissionBatch();
+  const rejectSubmission = useRejectSubmissionBatch();
   const [csvFileName, setCsvFileName] = useState("weekly-price-update.csv");
   const [csvContent, setCsvContent] = useState(
     "market_code,commodity_slug,price_date,price,unit,source_note\nMKD,yam,2026-04-18,6040,bag,Weekly market survey",
@@ -26,6 +32,15 @@ export function AdminPage() {
 
     return importPrices.data.importBatch;
   }, [importPrices.data]);
+
+  if (currentUser?.role !== "ADMIN") {
+    return (
+      <QueryState
+        title="Admin Access Required"
+        description="This workspace is reserved for administrators who review community submissions, run direct imports, and approve the records that shape BAPI analytics."
+      />
+    );
+  }
 
   async function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -156,7 +171,7 @@ export function AdminPage() {
 
               <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
                 <div className="text-sm text-bapi-evergreen/62">
-                  Submit one weekly row per market and commodity combination.
+                  Direct admin imports update the live monitored dataset immediately.
                 </div>
                 <button
                   type="submit"
@@ -257,6 +272,106 @@ export function AdminPage() {
                   <p className="text-sm leading-6 text-bapi-evergreen/72">{task}</p>
                 </article>
               ))}
+            </div>
+
+            <div className="mt-5 rounded-[1.4rem] border border-white/55 bg-white/68 p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.24em] text-bapi-jade">
+                    Pending public uploads
+                  </p>
+                  <p className="mt-2 text-sm text-bapi-evergreen/68">
+                    Review community submissions before they become part of the live dataset.
+                  </p>
+                </div>
+                <StatusPill tone="amber">
+                  {pendingSubmissions?.count ?? 0} Awaiting Review
+                </StatusPill>
+              </div>
+
+              <div className="mt-4 grid gap-3">
+                {pendingSubmissions?.items.length ? (
+                  pendingSubmissions.items.map((batch) => (
+                    <article
+                      key={batch.id}
+                      className="rounded-[1.3rem] border border-white/55 bg-bapi-cream/72 p-4"
+                    >
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                          <p className="font-semibold text-bapi-evergreen">
+                            {batch.fileName}
+                          </p>
+                          <p className="mt-1 text-sm text-bapi-evergreen/58">
+                            {batch.submitterName || "Unnamed contributor"}
+                            {batch.submitterEmail ? ` • ${batch.submitterEmail}` : ""}
+                          </p>
+                        </div>
+                        <StatusPill tone="amber">{batch.status}</StatusPill>
+                      </div>
+                      <div className="mt-3 grid grid-cols-3 gap-3 text-sm text-bapi-evergreen/72">
+                        <div>
+                          <p className="text-xs uppercase tracking-[0.2em] text-bapi-evergreen/42">
+                            Total rows
+                          </p>
+                          <p className="mt-1 font-semibold">{batch.totalRows}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs uppercase tracking-[0.2em] text-bapi-evergreen/42">
+                            Valid rows
+                          </p>
+                          <p className="mt-1 font-semibold">{batch.validRows}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs uppercase tracking-[0.2em] text-bapi-evergreen/42">
+                            Invalid rows
+                          </p>
+                          <p className="mt-1 font-semibold">{batch.invalidRows}</p>
+                        </div>
+                      </div>
+                      <div className="mt-4 grid gap-2">
+                        {batch.rows.slice(0, 3).map((row) => (
+                          <div
+                            key={row.id}
+                            className="rounded-[1rem] border border-white/60 bg-white/72 px-3 py-2 text-sm text-bapi-evergreen/70"
+                          >
+                            {row.commodity?.name ?? row.commoditySlug} in{" "}
+                            {row.market?.name ?? row.marketCode} on {row.priceDate}:{" "}
+                            {row.price.toLocaleString()} / {row.unit}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-4 flex flex-wrap gap-3">
+                        <button
+                          type="button"
+                          onClick={() => approveSubmission.mutate(batch.id)}
+                          disabled={approveSubmission.isPending || rejectSubmission.isPending}
+                          className="rounded-full bg-bapi-evergreen px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-bapi-evergreen/40"
+                        >
+                          {approveSubmission.isPending ? "Approving..." : "Approve batch"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            rejectSubmission.mutate({
+                              id: batch.id,
+                              reviewNote:
+                                "Submission rejected during review. The records were not added to the monitored dataset.",
+                            })
+                          }
+                          disabled={approveSubmission.isPending || rejectSubmission.isPending}
+                          className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-bapi-evergreen shadow-soft disabled:cursor-not-allowed disabled:opacity-55"
+                        >
+                          {rejectSubmission.isPending ? "Rejecting..." : "Reject batch"}
+                        </button>
+                      </div>
+                    </article>
+                  ))
+                ) : (
+                  <p className="text-sm leading-6 text-bapi-evergreen/62">
+                    No public uploads are waiting for review right now.
+                  </p>
+                )}
+              </div>
             </div>
 
             <div className="mt-5 rounded-[1.4rem] border border-white/55 bg-white/68 p-4">

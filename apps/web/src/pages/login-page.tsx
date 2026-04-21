@@ -24,7 +24,7 @@ export function LoginPage() {
         <div className="grid w-full max-w-6xl gap-4 lg:grid-cols-[1.1fr_0.9fr]">
           <section className="glass-panel rounded-[2.2rem] p-6 md:p-8">
             <BapiLogo />
-            <p className="mt-8 text-xs uppercase tracking-[0.28em] text-bapi-jade">Viewer and Admin Access</p>
+            <p className="mt-8 text-xs uppercase tracking-[0.28em] text-bapi-jade">Administrator Access</p>
             <h1 className="mt-4 max-w-3xl font-display text-4xl leading-[1.05] md:text-6xl">
               Agricultural market intelligence shaped for Benue State.
             </h1>
@@ -32,7 +32,7 @@ export function LoginPage() {
               BAPI combines weekly price monitoring, explainable trend analysis, market comparison, and optional forecasting in a calm, premium interface built for farmers, traders, and policymakers.
             </p>
             <div className="mt-8 grid gap-3 md:grid-cols-3">
-              {["Explainable alerts", "Controlled CSV import", "Forecast-ready UI"].map((item) => (
+              {["Review queued uploads", "Direct CSV import", "Forecast-ready analytics"].map((item) => (
                 <div key={item} className="rounded-[1.5rem] border border-white/50 bg-white/60 px-4 py-4 text-sm text-bapi-evergreen/72">
                   {item}
                 </div>
@@ -42,7 +42,7 @@ export function LoginPage() {
 
           <section className="glass-panel rounded-[2.2rem] p-6 md:p-8">
             <p className="text-xs uppercase tracking-[0.28em] text-bapi-jade">Sign In</p>
-            <h2 className="mt-4 font-display text-3xl">Welcome back to BAPI</h2>
+            <h2 className="mt-4 font-display text-3xl">Administrator sign in</h2>
             <form className="mt-8 grid gap-4" onSubmit={handleSubmit}>
               <label className="grid gap-2 text-sm">
                 <span>Email</span>
@@ -74,13 +74,13 @@ export function LoginPage() {
                 className="mt-2 inline-flex items-center justify-center gap-2 rounded-[1.4rem] bg-bapi-evergreen px-5 py-4 text-sm font-semibold text-white shadow-soft transition hover:bg-bapi-evergreen/92"
                 disabled={login.isPending}
               >
-                {login.isPending ? "Signing in..." : "Continue to dashboard"}
+                {login.isPending ? "Signing in..." : "Continue to admin workspace"}
                 <ArrowRight className="h-4 w-4" />
               </button>
             </form>
 
             <p className="mt-5 text-sm leading-6 text-bapi-evergreen/62">
-              Sign in to manage records, review alerts, and access the full BAPI administration workspace.
+              Sign in to review contributed uploads, manage direct imports, and control the approved dataset behind BAPI.
             </p>
             {login.error ? (
               <p className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-700">

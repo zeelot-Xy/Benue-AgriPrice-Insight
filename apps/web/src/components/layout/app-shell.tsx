@@ -9,6 +9,7 @@ import {
   LineChart,
   MapPinned,
   Menu,
+  Upload,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
@@ -20,6 +21,7 @@ const navigation = [
   { to: "/markets", label: "Markets", icon: MapPinned },
   { to: "/analytics", label: "Analytics", icon: ChartColumnIncreasing },
   { to: "/forecasts", label: "Forecasts", icon: LineChart },
+  { to: "/upload-prices", label: "Upload Prices", icon: Upload },
   { to: "/admin", label: "Admin", icon: Database },
 ];
 
@@ -27,6 +29,9 @@ export function AppShell({ children }: PropsWithChildren) {
   const { data: currentUser } = useCurrentUser();
   const logout = useLogout();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const visibleNavigation = navigation.filter((item) =>
+    item.to === "/admin" ? currentUser?.role === "ADMIN" : true,
+  );
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
@@ -92,7 +97,7 @@ export function AppShell({ children }: PropsWithChildren) {
           </div>
 
           <nav className="grid gap-2">
-            {navigation.map((item) => {
+            {visibleNavigation.map((item) => {
               const Icon = item.icon;
 
               return (
