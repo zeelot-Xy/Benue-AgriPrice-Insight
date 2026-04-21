@@ -1,7 +1,9 @@
 import type { PropsWithChildren } from "react";
+import { useState } from "react";
 import {
   Bell,
   ChartColumnIncreasing,
+  X,
   Database,
   LayoutDashboard,
   LineChart,
@@ -24,19 +26,55 @@ const navigation = [
 export function AppShell({ children }: PropsWithChildren) {
   const { data: currentUser } = useCurrentUser();
   const logout = useLogout();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-bapi-cream text-bapi-evergreen">
       <div className="bapi-background" />
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[1600px] flex-col px-4 py-4 md:px-6 lg:flex-row lg:gap-6 lg:px-8">
-        <aside className="glass-panel mb-4 flex flex-col gap-6 rounded-[2rem] p-5 lg:mb-0 lg:w-[300px] lg:p-6">
+        <div className="mb-4 flex items-center justify-between gap-3 rounded-[2rem] border border-white/45 bg-white/55 px-4 py-4 shadow-soft backdrop-blur-xl lg:hidden">
+          <BapiLogo />
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen((value) => !value)}
+            aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={isMobileMenuOpen}
+            className="grid h-11 w-11 place-items-center rounded-2xl border border-white/40 bg-white/70 text-bapi-evergreen shadow-soft"
+          >
+            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
+
+        {isMobileMenuOpen ? (
+          <button
+            type="button"
+            aria-label="Close navigation menu"
+            onClick={closeMobileMenu}
+            className="fixed inset-0 z-20 bg-bapi-evergreen/24 backdrop-blur-[2px] lg:hidden"
+          />
+        ) : null}
+
+        <aside
+          className={[
+            "glass-panel fixed inset-y-4 left-4 z-30 flex max-h-[calc(100vh-2rem)] w-[min(22rem,calc(100vw-2rem))] flex-col gap-6 overflow-y-auto overscroll-contain rounded-[2rem] p-5 transition duration-300 lg:static lg:inset-auto lg:z-auto lg:mb-0 lg:max-h-none lg:w-[300px] lg:translate-x-0 lg:overflow-visible lg:p-6 lg:opacity-100",
+            isMobileMenuOpen
+              ? "translate-x-0 opacity-100"
+              : "-translate-x-[120%] opacity-0 pointer-events-none lg:pointer-events-auto",
+          ].join(" ")}
+        >
           <div className="flex items-center justify-between gap-3">
             <BapiLogo />
             <button
               type="button"
+              onClick={closeMobileMenu}
+              aria-label="Close navigation menu"
               className="grid h-11 w-11 place-items-center rounded-2xl border border-white/40 bg-white/55 text-bapi-evergreen shadow-soft lg:hidden"
             >
-              <Menu className="h-5 w-5" />
+              <X className="h-5 w-5" />
             </button>
           </div>
 
@@ -62,6 +100,7 @@ export function AppShell({ children }: PropsWithChildren) {
                   key={item.to}
                   to={item.to}
                   end={item.to === "/"}
+                  onClick={closeMobileMenu}
                   className={({ isActive }) =>
                     [
                       "group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition",
