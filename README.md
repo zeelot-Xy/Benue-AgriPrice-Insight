@@ -64,6 +64,7 @@ This project is intentionally scoped for feasibility, explainability, and techni
 - `docs/academic/report-chapter-mapping.md`: maps repository evidence to final report chapters
 - `docs/academic/methodology-and-implementation-mapping.md`: maps the development method to actual implementation phases
 - `docs/academic/defense-evidence-matrix.md`: likely defense questions and supporting evidence
+- `docs/academic/defense-presentation-outline.md`: suggested slide-by-slide structure for the final presentation
 - `docs/architecture`: repository structure, system architecture, ERD, API boundaries, analysis rules
 - `docs/architecture/backend-api-development.md`: implemented backend scope and route coverage
 - `docs/architecture/rule-based-analysis-engine.md`: implemented analytics endpoints and deterministic rules
@@ -75,6 +76,8 @@ This project is intentionally scoped for feasibility, explainability, and techni
 - `docs/meetings`: supervisor meeting records
 - `docs/references`: manual follow-up instructions for assets or details that cannot be finalized directly in Markdown
 - `docs/references/submission-readiness-checklist.md`: final submission and defense checklist
+- `docs/references/defense-demo-runbook.md`: practical live demo flow and fallback plan
+- `docs/references/final-polish-handoff.md`: summary of what is complete and what still depends on you
 - `CONTRIBUTING.md`: Git workflow discipline, branch strategy, and commit conventions
 
 ## Repository Layout
@@ -115,7 +118,8 @@ tests/            # integration and end-to-end tests later
 - Phase 10 completed: live frontend-backend integration with TanStack Query and auth wiring
 - Phase 11 completed: smoke-check workflow, runtime blocker review, and testing/debugging guidance
 - Phase 12 completed: documentation mapping, defense evidence preparation, and submission readiness support
-- Phase 13 onward: final polishing and defense rehearsal continue incrementally
+- Phase 13 completed: final polish support, defense presentation outline, and demo runbook
+- Project implementation phases complete: final personal submission tasks remain
 
 ## Current Setup Expectations
 This repository now includes the project documentation set, dataset foundation, Prisma data model, backend APIs, explainable analytics, forecasting service integration, the frontend product shell, and live frontend-backend data integration. Comprehensive testing and final hardening remain for the next phases.
