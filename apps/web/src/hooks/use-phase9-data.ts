@@ -7,6 +7,7 @@ import {
   getCurrentUser,
   getDashboardData,
   getForecastData,
+  importPricesCsv,
   getMarketData,
 } from "../services/bapi-api";
 import {
@@ -79,4 +80,21 @@ export function useLogout() {
     clearStoredToken();
     void queryClient.invalidateQueries();
   };
+}
+
+export function useImportPrices() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: importPricesCsv,
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["admin-data"] }),
+        queryClient.invalidateQueries({ queryKey: ["dashboard-data"] }),
+        queryClient.invalidateQueries({ queryKey: ["market-data"] }),
+        queryClient.invalidateQueries({ queryKey: ["analytics-data"] }),
+        queryClient.invalidateQueries({ queryKey: ["forecast-data"] }),
+      ]);
+    },
+  });
 }

@@ -167,6 +167,22 @@ type CurrentUserResponse = {
   createdAt: string;
 };
 
+type ImportPricesResponse = {
+  importBatch: {
+    id: number;
+    fileName: string;
+    status: string;
+    totalRows: number;
+    successRows: number;
+    failedRows: number;
+    createdAt: string;
+  };
+  failures: Array<{
+    rowNumber: number;
+    reason: string;
+  }>;
+};
+
 type IntegrationSource = "live" | "fallback";
 
 const marketDescriptions: Record<
@@ -355,6 +371,17 @@ export async function authenticate(input: { email: string; password: string }) {
 
 export async function getCurrentUser() {
   return fetchJson<CurrentUserResponse>("/auth/me", true);
+}
+
+export async function importPricesCsv(input: {
+  fileName: string;
+  csvContent: string;
+}) {
+  return apiFetch<ImportPricesResponse>("/prices/import", {
+    method: "POST",
+    auth: true,
+    body: JSON.stringify(input),
+  });
 }
 
 export async function getDashboardData() {
@@ -573,10 +600,11 @@ export async function getForecastData() {
 
 export async function getAdminData() {
   try {
-    const [overview, markets, commodities] = await Promise.all([
+    const [overview, markets, commodities, recentPrices] = await Promise.all([
       fetchJson<ReportsOverviewResponse>("/reports/overview"),
       fetchJson<Market[]>("/markets"),
       fetchJson<Commodity[]>("/commodities"),
+      fetchJson<PriceListResponse>("/prices?page=1&limit=6"),
     ]);
 
     return {
@@ -595,6 +623,26 @@ export async function getAdminData() {
         markets: markets.length,
         commodities: commodities.length,
       },
+      importTemplate: {
+        acceptedFileTypes: ".csv",
+        requiredColumns: [
+          "market_code",
+          "commodity_slug",
+          "price_date",
+          "price",
+          "unit",
+          "source_note",
+        ],
+        note: "Use one row per commodity, market, and week. Dates must be in YYYY-MM-DD format.",
+      },
+      recentRecords: recentPrices.items.map((item) => ({
+        id: item.id,
+        market: item.market?.name ?? `Market ${item.marketId}`,
+        commodity: item.commodity?.name ?? `Commodity ${item.commodityId}`,
+        priceDate: item.priceDate,
+        price: item.price,
+        unit: item.unit,
+      })),
     };
   } catch {
     return {
@@ -608,6 +656,19 @@ export async function getAdminData() {
         markets: 4,
         commodities: 8,
       },
+      importTemplate: {
+        acceptedFileTypes: ".csv",
+        requiredColumns: [
+          "market_code",
+          "commodity_slug",
+          "price_date",
+          "price",
+          "unit",
+          "source_note",
+        ],
+        note: "Use one row per commodity, market, and week. Dates must be in YYYY-MM-DD format.",
+      },
+      recentRecords: [],
     };
   }
 }
