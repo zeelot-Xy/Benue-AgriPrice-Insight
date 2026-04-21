@@ -19,4 +19,4 @@ This file is the single checklist of manual actions you must personally complete
 | Record threshold refinements | `docs/architecture/data-flow-and-analysis-rules.md` | Update placeholder thresholds if supervisor or data review changes them | Yes | Yes |
 
 ## Usage Rule
-Whenever a document contains a “Personal Actions Required” section, make sure the same action appears here once as the master checklist entry.
+Whenever a document contains a "Personal Actions Required" section, make sure the same action appears here once as the master checklist entry.
