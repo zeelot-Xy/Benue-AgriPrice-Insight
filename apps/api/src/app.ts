@@ -10,6 +10,7 @@ import { forecastsRouter } from "./modules/forecasts/forecasts.routes.js";
 import { marketRouter } from "./modules/markets/markets.routes.js";
 import { priceRouter } from "./modules/prices/prices.routes.js";
 import { reportRouter } from "./modules/reports/reports.routes.js";
+import { submissionsRouter } from "./modules/submissions/submissions.routes.js";
 
 export function createApp() {
   const app = express();
@@ -46,6 +47,7 @@ export function createApp() {
   app.use("/api/forecasts", forecastsRouter);
   app.use("/api/prices", priceRouter);
   app.use("/api/reports", reportRouter);
+  app.use("/api/submissions", submissionsRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

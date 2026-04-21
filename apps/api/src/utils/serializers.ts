@@ -2,6 +2,8 @@ import type {
   Commodity,
   ImportBatch,
   Market,
+  PriceSubmissionBatch,
+  PriceSubmissionRow,
   PriceRecord,
   Prisma,
   User,
@@ -14,6 +16,16 @@ type PriceRecordWithRelations = PriceRecord & {
   commodity?: Commodity;
   importBatch?: ImportBatch | null;
   createdBy?: User | null;
+};
+
+type PriceSubmissionBatchWithRelations = PriceSubmissionBatch & {
+  reviewedBy?: User | null;
+  rows?: Array<
+    PriceSubmissionRow & {
+      market?: Market;
+      commodity?: Commodity;
+    }
+  >;
 };
 
 export function serializePriceRecord(record: PriceRecordWithRelations) {
@@ -43,6 +55,59 @@ export function serializePriceRecord(record: PriceRecordWithRelations) {
           name: record.commodity.name,
         }
       : undefined,
+  };
+}
+
+export function serializePriceSubmissionBatch(
+  batch: PriceSubmissionBatchWithRelations,
+) {
+  return {
+    id: batch.id,
+    fileName: batch.fileName,
+    submitterName: batch.submitterName,
+    submitterEmail: batch.submitterEmail,
+    sourceChannel: batch.sourceChannel,
+    status: batch.status,
+    totalRows: batch.totalRows,
+    validRows: batch.validRows,
+    invalidRows: batch.invalidRows,
+    reviewNote: batch.reviewNote,
+    reviewedAt: batch.reviewedAt?.toISOString() ?? null,
+    createdAt: batch.createdAt.toISOString(),
+    updatedAt: batch.updatedAt.toISOString(),
+    reviewedBy: batch.reviewedBy
+      ? {
+          id: batch.reviewedBy.id,
+          fullName: batch.reviewedBy.fullName,
+          email: batch.reviewedBy.email,
+        }
+      : null,
+    rows:
+      batch.rows?.map((row) => ({
+        id: row.id,
+        marketId: row.marketId,
+        commodityId: row.commodityId,
+        marketCode: row.marketCode,
+        commoditySlug: row.commoditySlug,
+        priceDate: toDateOnly(row.priceDate),
+        price: Number(row.price),
+        unit: row.unit,
+        sourceNote: row.sourceNote,
+        market: row.market
+          ? {
+              id: row.market.id,
+              code: row.market.code,
+              name: row.market.name,
+            }
+          : undefined,
+        commodity: row.commodity
+          ? {
+              id: row.commodity.id,
+              slug: row.commodity.slug,
+              name: row.commodity.name,
+            }
+          : undefined,
+      })) ?? [],
   };
 }
 
