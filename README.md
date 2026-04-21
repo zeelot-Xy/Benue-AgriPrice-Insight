@@ -67,6 +67,7 @@ This project is intentionally scoped for feasibility, explainability, and techni
 - `docs/architecture/ml-forecasting-service.md`: implemented Prophet-based forecasting service and backend integration
 - `docs/architecture/frontend-ui-phase9.md`: implemented frontend shell, page routes, and chart-driven dashboard views
 - `docs/architecture/frontend-backend-integration-phase10.md`: implemented live frontend data integration, auth wiring, and fallback behavior
+- `docs/architecture/testing-and-debugging-phase11.md`: testing checklist, runtime blockers, and smoke-check workflow
 - `docs/branding`: brand and logo specification
 - `docs/meetings`: supervisor meeting records
 - `docs/references`: manual follow-up instructions for assets or details that cannot be finalized directly in Markdown
@@ -108,7 +109,8 @@ tests/            # integration and end-to-end tests later
 - Phase 8 completed: FastAPI Prophet forecasting service and backend forecast history integration
 - Phase 9 completed: frontend UI shell, themed pages, and chart-driven dashboard foundation
 - Phase 10 completed: live frontend-backend integration with TanStack Query and auth wiring
-- Phase 11 onward: testing, debugging, and edge-case hardening continue incrementally
+- Phase 11 completed: smoke-check workflow, runtime blocker review, and testing/debugging guidance
+- Phase 12 onward: documentation mapping and final academic packaging continue incrementally
 
 ## Current Setup Expectations
 This repository now includes the project documentation set, dataset foundation, Prisma data model, backend APIs, explainable analytics, forecasting service integration, the frontend product shell, and live frontend-backend data integration. Comprehensive testing and final hardening remain for the next phases.

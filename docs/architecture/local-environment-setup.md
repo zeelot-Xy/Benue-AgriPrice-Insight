@@ -44,3 +44,4 @@ This phase introduces only bootstrapping and health endpoints. It does not yet i
 - Copy `.env.example` to `.env` before running the stack locally later.
 - Install Node and Python dependencies locally if you want non-Docker development in addition to Docker Compose.
 - After database migration and seeding later, use the seed admin credentials from `.env` to test the auth endpoints.
+- Use `npm run smoke:check` in later phases to verify the stack quickly after startup.
