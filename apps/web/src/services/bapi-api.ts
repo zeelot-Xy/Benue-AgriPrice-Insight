@@ -183,6 +183,66 @@ type ImportPricesResponse = {
   }>;
 };
 
+type SubmissionBatchRow = {
+  id: number;
+  marketId: number;
+  commodityId: number;
+  marketCode: string;
+  commoditySlug: string;
+  priceDate: string;
+  price: number;
+  unit: string;
+  sourceNote: string | null;
+  market?: { id: number; code: string; name: string };
+  commodity?: { id: number; slug: string; name: string };
+};
+
+type SubmissionBatch = {
+  id: number;
+  fileName: string;
+  submitterName: string | null;
+  submitterEmail: string | null;
+  sourceChannel: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  totalRows: number;
+  validRows: number;
+  invalidRows: number;
+  reviewNote: string | null;
+  reviewedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  reviewedBy: { id: number; fullName: string; email: string } | null;
+  rows: SubmissionBatchRow[];
+};
+
+type PublicPriceUploadResponse = {
+  batch: SubmissionBatch;
+  failures: Array<{
+    rowNumber: number;
+    reason: string;
+  }>;
+  message: string;
+};
+
+type PendingSubmissionBatchesResponse = {
+  count: number;
+  items: SubmissionBatch[];
+};
+
+type ApproveSubmissionResponse = {
+  batch: SubmissionBatch;
+  appliedRows: {
+    created: number;
+    updated: number;
+  };
+  message: string;
+};
+
+type RejectSubmissionResponse = {
+  batch: SubmissionBatch;
+  message: string;
+};
+
 type IntegrationSource = "live" | "fallback";
 
 const marketDescriptions: Record<
@@ -382,6 +442,104 @@ export async function importPricesCsv(input: {
     auth: true,
     body: JSON.stringify(input),
   });
+}
+
+export async function submitPublicPriceUpload(input: {
+  fileName: string;
+  csvContent: string;
+  submitterName?: string;
+  submitterEmail?: string;
+}) {
+  return apiFetch<PublicPriceUploadResponse>("/submissions/public-upload", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+}
+
+export async function getPendingSubmissionBatches(limit = 10) {
+  return fetchJson<PendingSubmissionBatchesResponse>(
+    `/submissions/pending?limit=${limit}`,
+    true,
+  );
+}
+
+export async function approveSubmissionBatch(id: number) {
+  return apiFetch<ApproveSubmissionResponse>(`/submissions/${id}/approve`, {
+    method: "POST",
+    auth: true,
+  });
+}
+
+export async function rejectSubmissionBatch(id: number, reviewNote?: string) {
+  return apiFetch<RejectSubmissionResponse>(`/submissions/${id}/reject`, {
+    method: "POST",
+    auth: true,
+    body: JSON.stringify({
+      reviewNote,
+    }),
+  });
+}
+
+export async function getUploadPageData() {
+  try {
+    const [markets, commodities] = await Promise.all([
+      fetchJson<Market[]>("/markets"),
+      fetchJson<Commodity[]>("/commodities"),
+    ]);
+
+    return {
+      source: "live" as IntegrationSource,
+      note:
+        "Public uploads enter a review queue first. They do not change dashboard statistics until an administrator approves them.",
+      importTemplate: {
+        acceptedFileTypes: ".csv",
+        requiredColumns: [
+          "market_code",
+          "commodity_slug",
+          "price_date",
+          "price",
+          "unit",
+          "source_note",
+        ],
+        note: "Only the four approved Benue markets and eight approved commodities are accepted.",
+      },
+      scopeSummary: {
+        markets: markets.map((item) => `${item.name} (${item.code})`),
+        commodities: commodities.map((item) => item.name),
+      },
+    };
+  } catch {
+    return {
+      ...buildFallbackNote(
+        "Reference services are temporarily unavailable, but uploads can still be prepared using the approved BAPI CSV format.",
+      ),
+      importTemplate: {
+        acceptedFileTypes: ".csv",
+        requiredColumns: [
+          "market_code",
+          "commodity_slug",
+          "price_date",
+          "price",
+          "unit",
+          "source_note",
+        ],
+        note: "Only the four approved Benue markets and eight approved commodities are accepted.",
+      },
+      scopeSummary: {
+        markets: ["Makurdi (MKD)", "Gboko (GBK)", "Zaki Biam (ZKB)", "Otukpo (OTP)"],
+        commodities: [
+          "Yam",
+          "Cassava",
+          "Rice",
+          "Maize",
+          "Beans",
+          "Soybean",
+          "Millet",
+          "Sorghum",
+        ],
+      },
+    };
+  }
 }
 
 export async function getDashboardData() {

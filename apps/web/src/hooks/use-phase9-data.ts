@@ -1,14 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
+  approveSubmissionBatch,
   authenticate,
   getAdminData,
   getAnalyticsData,
   getCurrentUser,
   getDashboardData,
   getForecastData,
+  getPendingSubmissionBatches,
+  getUploadPageData,
   importPricesCsv,
   getMarketData,
+  rejectSubmissionBatch,
+  submitPublicPriceUpload,
 } from "../services/bapi-api";
 import {
   clearStoredToken,
@@ -48,6 +53,13 @@ export function useAdminData() {
   return useQuery({
     queryKey: ["admin-data"],
     queryFn: getAdminData,
+  });
+}
+
+export function useUploadPageData() {
+  return useQuery({
+    queryKey: ["upload-page-data"],
+    queryFn: getUploadPageData,
   });
 }
 
@@ -95,6 +107,56 @@ export function useImportPrices() {
         queryClient.invalidateQueries({ queryKey: ["analytics-data"] }),
         queryClient.invalidateQueries({ queryKey: ["forecast-data"] }),
       ]);
+    },
+  });
+}
+
+export function usePublicPriceUpload() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: submitPublicPriceUpload,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["pending-submissions"] });
+    },
+  });
+}
+
+export function usePendingSubmissionBatches() {
+  return useQuery({
+    queryKey: ["pending-submissions"],
+    queryFn: () => getPendingSubmissionBatches(10),
+    enabled: Boolean(getStoredToken()),
+    retry: false,
+  });
+}
+
+export function useApproveSubmissionBatch() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: approveSubmissionBatch,
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["pending-submissions"] }),
+        queryClient.invalidateQueries({ queryKey: ["admin-data"] }),
+        queryClient.invalidateQueries({ queryKey: ["dashboard-data"] }),
+        queryClient.invalidateQueries({ queryKey: ["market-data"] }),
+        queryClient.invalidateQueries({ queryKey: ["analytics-data"] }),
+        queryClient.invalidateQueries({ queryKey: ["forecast-data"] }),
+      ]);
+    },
+  });
+}
+
+export function useRejectSubmissionBatch() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, reviewNote }: { id: number; reviewNote?: string }) =>
+      rejectSubmissionBatch(id, reviewNote),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["pending-submissions"] });
     },
   });
 }

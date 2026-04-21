@@ -2,6 +2,8 @@ import { Suspense, lazy } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 
 import { AppShell } from "./components/layout/app-shell";
+import { QueryState } from "./components/ui/query-state";
+import { useCurrentUser } from "./hooks/use-phase9-data";
 
 const AdminPage = lazy(() =>
   import("./pages/admin-page").then((module) => ({ default: module.AdminPage })),
@@ -27,6 +29,11 @@ const LoginPage = lazy(() =>
 const MarketsPage = lazy(() =>
   import("./pages/markets-page").then((module) => ({ default: module.MarketsPage })),
 );
+const UploadPricesPage = lazy(() =>
+  import("./pages/upload-prices-page").then((module) => ({
+    default: module.UploadPricesPage,
+  })),
+);
 
 function RouteFallback() {
   return (
@@ -49,6 +56,25 @@ function ShellLayout() {
   );
 }
 
+function AdminRoute() {
+  const { data: currentUser, isLoading } = useCurrentUser();
+
+  if (isLoading) {
+    return <RouteFallback />;
+  }
+
+  if (currentUser?.role !== "ADMIN") {
+    return (
+      <QueryState
+        title="Admin Access Required"
+        description="This workspace is reserved for BAPI administrators who review submissions, manage imports, and publish approved records into the monitored dataset."
+      />
+    );
+  }
+
+  return <AdminPage />;
+}
+
 export default function App() {
   return (
     <Suspense fallback={<RouteFallback />}>
@@ -59,7 +85,8 @@ export default function App() {
           <Route path="/markets" element={<MarketsPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/forecasts" element={<ForecastsPage />} />
-          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/upload-prices" element={<UploadPricesPage />} />
+          <Route path="/admin" element={<AdminRoute />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
