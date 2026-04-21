@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import { ArrowRight, LockKeyhole, UserRound } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, LockKeyhole, UserRound } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { BapiLogo } from "../components/brand/bapi-logo";
@@ -10,6 +10,7 @@ export function LoginPage() {
   const login = useLogin();
   const [email, setEmail] = useState("admin@bapi.local");
   const [password, setPassword] = useState("BapiAdmin123!");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -61,12 +62,24 @@ export function LoginPage() {
                 <div className="flex items-center gap-3 rounded-[1.4rem] border border-white/60 bg-white/70 px-4 py-3">
                   <LockKeyhole className="h-4 w-4 text-bapi-evergreen/45" />
                   <input
-                    type="password"
+                    type={isPasswordVisible ? "text" : "password"}
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     className="w-full bg-transparent outline-none placeholder:text-bapi-evergreen/35"
                     placeholder="Enter your account password"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setIsPasswordVisible((value) => !value)}
+                    aria-label={isPasswordVisible ? "Hide password" : "Show password"}
+                    className="grid h-8 w-8 place-items-center rounded-full text-bapi-evergreen/55 transition hover:bg-white/70 hover:text-bapi-evergreen"
+                  >
+                    {isPasswordVisible ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
                 </div>
               </label>
               <button
