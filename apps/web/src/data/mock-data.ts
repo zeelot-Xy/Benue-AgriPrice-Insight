@@ -113,7 +113,7 @@ export const seasonalityInsights = [
     month: "April",
     averagePrice: 4098,
     note:
-      "Soybean retains a premium in Zaki Biam and Makurdi, making it useful for market-comparison demonstrations.",
+      "Soybean retains a premium in Zaki Biam and Makurdi, making it a strong commodity for cross-market analysis.",
   },
 ];
 
@@ -140,7 +140,7 @@ export const quickActions = [
 ];
 
 export const phase9Notes = {
-  uiStatus: "Phase 9 interface built with mock-query data and API-ready structure.",
+  uiStatus: "The interface is ready for monitoring, review, and presentation.",
   integrationStatus:
-    "Live backend integration is intentionally deferred to Phase 10.",
+    "Prepared data remains available whenever live services are temporarily unavailable.",
 };

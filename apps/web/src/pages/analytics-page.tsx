@@ -28,13 +28,13 @@ export function AnalyticsPage() {
 
   return (
     <div className="grid gap-4 md:gap-6">
-      <SectionCard
-        eyebrow="Trend Detection"
-        title="Explainable movement using weekly observed records"
-        description="This page emphasizes the analytical story before machine learning: trend thresholds, alert conditions, and seasonal interpretation remain readable by non-technical users."
+        <SectionCard
+          eyebrow="Trend Detection"
+          title="Explainable movement using weekly observed records"
+          description="This page emphasizes the analytical story before machine learning: trend thresholds, alert conditions, and seasonal interpretation remain readable by non-technical users."
         action={
           <StatusPill tone={data.source === "live" ? "jade" : "mint"}>
-            {data.source === "live" ? "Live Analytics" : "Fallback Demo"}
+            {data.source === "live" ? "Live Analytics" : "Offline Snapshot"}
           </StatusPill>
         }
       >
@@ -67,7 +67,7 @@ export function AnalyticsPage() {
         <SectionCard
           eyebrow="Alert Logic"
           title="Severity and reasoning cards"
-          description="These alert cards are designed to pair a concise severity signal with a human explanation, which is important for academic defense."
+          description="Each alert combines a concise severity signal with a plain-language explanation so users can understand what changed and why it matters."
         >
           <div className="grid gap-3">
             {data.alerts.map((alert) => (

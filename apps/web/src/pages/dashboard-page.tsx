@@ -77,10 +77,10 @@ export function DashboardPage() {
         <SectionCard
           eyebrow="Weekly Movement"
           title="Commodity trajectory across recent weekly entries"
-          description="This view is designed for fast comparison of key commodity price movement and will connect directly to the price-record API in Phase 10."
+          description="This view brings together recent weekly movement across key commodities so users can compare direction, speed, and volatility at a glance."
           action={
             <StatusPill tone={data.source === "live" ? "jade" : "mint"}>
-              {data.source === "live" ? "Live Backend" : "Fallback Demo"}
+              {data.source === "live" ? "Live Data" : "Offline Snapshot"}
             </StatusPill>
           }
         >
@@ -101,8 +101,8 @@ export function DashboardPage() {
 
         <SectionCard
           eyebrow="Quick Actions"
-          title="Focused actions for the demo narrative"
-          description="These cards frame the user journey we will connect next: import, monitor, compare, then forecast."
+          title="Core tasks across the monitoring workflow"
+          description="These actions reflect the main product journey: update weekly prices, review signals, compare markets, and examine projections."
         >
           <div className="grid gap-3">
             {data.quickActions.map((item) => (
@@ -158,7 +158,7 @@ export function DashboardPage() {
         <SectionCard
           eyebrow="Market Comparison"
           title="Cross-market reading for soybean, millet, and sorghum"
-          description="This panel previews the comparison-first decision support story for policymakers and traders."
+          description="This panel helps farmers, traders, and decision-makers see where prices are strongest and where state-level differences are emerging."
         >
           <div className="h-[320px]">
             <ResponsiveContainer width="100%" height="100%">

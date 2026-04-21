@@ -38,13 +38,13 @@ export function ForecastsPage() {
 
   return (
     <div className="grid gap-4 md:gap-6">
-      <SectionCard
-        eyebrow="Forecast Overview"
-        title="Short-term projection with a clear separation from actual prices"
-        description="This screen is intentionally explicit that forecasting is advisory. It sits on top of historical monitoring, not in place of it."
+        <SectionCard
+          eyebrow="Forecast Overview"
+          title="Short-term projection with a clear separation from actual prices"
+          description="This screen is intentionally explicit that forecasting is advisory. It sits on top of historical monitoring, not in place of it."
         action={
           <StatusPill tone={data.source === "live" ? "evergreen" : "mint"}>
-            {data.source === "live" ? "Live Forecast" : "Fallback Forecast"}
+            {data.source === "live" ? "Forecast Service" : "Offline Snapshot"}
           </StatusPill>
         }
       >

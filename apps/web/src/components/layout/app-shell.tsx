@@ -106,14 +106,14 @@ export function AppShell({ children }: PropsWithChildren) {
 
             <div className="grid gap-3 rounded-[1.6rem] border border-white/50 bg-white/55 px-4 py-3 text-sm text-bapi-evergreen/72 md:min-w-[280px]">
               <div className="flex items-center justify-between gap-3">
-                <span>{currentUser ? currentUser.role : "Viewer mode"}</span>
+                <span>{currentUser ? currentUser.role : "Guest Access"}</span>
                 <span className="rounded-full bg-bapi-jade/15 px-3 py-1 text-xs font-semibold text-bapi-jade">
-                  {currentUser ? currentUser.fullName : "Demo Ready"}
+                  {currentUser ? currentUser.fullName : "BAPI Platform"}
                 </span>
               </div>
               <div className="flex items-center justify-between gap-3">
-                <span>Forecast layer</span>
-                <span>Phase 8 wired</span>
+                <span>Forecasting</span>
+                <span>Enabled</span>
               </div>
               {currentUser ? (
                 <button

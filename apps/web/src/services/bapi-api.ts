@@ -373,7 +373,7 @@ export async function getDashboardData() {
 
     return {
       source: "live" as IntegrationSource,
-      note: "Dashboard is connected to live backend endpoints.",
+      note: "Dashboard data is being refreshed from the BAPI monitoring services.",
       summary: {
         totalMarkets: overview.counts.markets,
         totalCommodities: overview.counts.commodities,
@@ -386,15 +386,15 @@ export async function getDashboardData() {
       alerts: mapAlerts(alerts.items),
       quickActions,
       phase9Notes: {
-        uiStatus: "Phase 10 integration is active on the main dashboard.",
+        uiStatus: "Current market indicators are available across the dashboard.",
         integrationStatus:
-          "The interface is now reading from backend reports, analytics, and prices endpoints.",
+          "Reports, alerts, and weekly price records are synchronized into this view.",
       },
     };
   } catch {
     return {
       ...buildFallbackNote(
-        "Backend unavailable. Showing Phase 9 demo data until the API is running.",
+        "Live services are temporarily unavailable, so the dashboard is showing the most recent prepared snapshot.",
       ),
       summary: dashboardSummary,
       weeklyPriceSeries: fallbackWeeklyPriceSeries,
@@ -416,7 +416,7 @@ export async function getMarketData() {
 
     return {
       source: "live" as IntegrationSource,
-      note: "Market cards and seasonality notes now use backend data.",
+      note: "Market summaries and seasonal notes are being drawn from current BAPI records.",
       marketCards: markets.map((market) => ({
         name: market.name,
         code: market.code,
@@ -432,7 +432,7 @@ export async function getMarketData() {
   } catch {
     return {
       ...buildFallbackNote(
-        "Live market endpoints could not be reached. Displaying locally prepared comparison data.",
+        "Market services are temporarily unavailable, so comparison cards are showing a prepared reference snapshot.",
       ),
       marketCards: fallbackMarketCards,
       comparison: fallbackMarketComparison,
@@ -452,7 +452,7 @@ export async function getAnalyticsData() {
 
     return {
       source: "live" as IntegrationSource,
-      note: "Analytics panels are powered by backend thresholds and seasonality endpoints.",
+      note: "Analytics panels are using current trend, alert, and seasonality calculations.",
       alerts: mapAlerts(alerts.items),
       seasonalityInsights: buildSeasonalityCards(seasonality),
       weeklyPriceSeries: combineWeeklySeries({
@@ -462,7 +462,7 @@ export async function getAnalyticsData() {
   } catch {
     return {
       ...buildFallbackNote(
-        "Analytics endpoints are offline. Using local demonstration analytics data.",
+        "Analytics services are temporarily unavailable, so this page is showing a prepared reference snapshot.",
       ),
       alerts: fallbackAlerts,
       seasonalityInsights: fallbackSeasonalityInsights,
@@ -529,7 +529,7 @@ export async function getForecastData() {
 
     return {
       source: "live" as IntegrationSource,
-      note: "Forecast page is connected to backend forecast generation and history endpoints.",
+      note: "Forecast results are being generated from the active forecasting workflow and stored run history.",
       summary: {
         totalMarkets: overview.counts.markets,
         totalCommodities: overview.counts.commodities,
@@ -553,7 +553,7 @@ export async function getForecastData() {
   } catch {
     return {
       ...buildFallbackNote(
-        "Forecast endpoint is unavailable. Showing the prepared demo projection until API and ML services are both running.",
+        "Forecast services are temporarily unavailable, so this page is showing a prepared projection snapshot.",
       ),
       summary: dashboardSummary,
       alerts: fallbackAlerts,
@@ -563,7 +563,7 @@ export async function getForecastData() {
         market: "Makurdi",
         commodity: "Yam",
         explanation:
-          "Live forecast generation is not currently reachable from the frontend.",
+          "A saved projection view is being shown while live forecast generation is unavailable.",
         confidenceLabel: "Moderate",
         historyCount: 0,
       },
@@ -581,7 +581,7 @@ export async function getAdminData() {
 
     return {
       source: "live" as IntegrationSource,
-      note: "Admin overview now reads live reference counts from the backend.",
+      note: "Administrative counts and scope information are being read from the current system records.",
       adminTasks,
       quickActions,
       summary: {
@@ -599,7 +599,7 @@ export async function getAdminData() {
   } catch {
     return {
       ...buildFallbackNote(
-        "Admin summary is showing local placeholders until the API is available.",
+        "Administrative services are temporarily unavailable, so this workspace is showing a prepared summary snapshot.",
       ),
       adminTasks,
       quickActions,

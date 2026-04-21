@@ -31,11 +31,11 @@ export function AdminPage() {
     <div className="grid gap-4 md:gap-6">
       <SectionCard
         eyebrow="Admin Workspace"
-        title="Controlled data management for demo-safe operations"
-        description="The admin interface is intentionally framed around manual entry and CSV import, which keeps the project realistic and defendable."
+        title="Controlled data management for weekly market updates"
+        description="The admin workspace supports careful data stewardship through manual entry, CSV import, and controlled update workflows."
         action={
           <StatusPill tone={data.source === "live" ? "jade" : "mint"}>
-            {data.source === "live" ? "Live Summary" : "Fallback Summary"}
+            {data.source === "live" ? "Live Summary" : "Offline Summary"}
           </StatusPill>
         }
       >
@@ -48,11 +48,11 @@ export function AdminPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-bapi-evergreen">CSV Import Zone</h3>
-                  <p className="text-sm text-bapi-evergreen/68">Upload the controlled weekly template only.</p>
+                  <p className="text-sm text-bapi-evergreen/68">Upload weekly market price records using the approved BAPI template.</p>
                 </div>
               </div>
               <div className="mt-5 rounded-[1.4rem] border border-dashed border-bapi-evergreen/18 bg-bapi-cream/70 p-6 text-center text-sm text-bapi-evergreen/58">
-                Drag-and-drop styling placeholder for Phase 10 integration
+                Import workspace for validated weekly CSV submissions
               </div>
             </article>
 
@@ -103,7 +103,7 @@ export function AdminPage() {
             <div className="mt-5 flex items-center gap-3 rounded-[1.4rem] bg-[linear-gradient(140deg,rgba(15,58,47,0.92),rgba(15,58,47,0.78))] p-4 text-white">
               <WandSparkles className="h-5 w-5 text-bapi-mint" />
               <p className="text-sm leading-6 text-white/82">
-                Forecasting stays optional and explainable. Data quality comes first.
+                Reliable analysis begins with clean records, complete coverage, and clear explanations.
               </p>
             </div>
           </div>

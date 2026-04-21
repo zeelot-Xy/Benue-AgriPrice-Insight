@@ -65,7 +65,7 @@ export function LoginPage() {
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     className="w-full bg-transparent outline-none placeholder:text-bapi-evergreen/35"
-                    placeholder="Phase 10 will connect this form"
+                    placeholder="Enter your account password"
                   />
                 </div>
               </label>
@@ -80,7 +80,7 @@ export function LoginPage() {
             </form>
 
             <p className="mt-5 text-sm leading-6 text-bapi-evergreen/62">
-              Phase 10 connects this form to the backend auth endpoint using the seeded demo admin account by default.
+              Sign in to manage records, review alerts, and access the full BAPI administration workspace.
             </p>
             {login.error ? (
               <p className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-700">
@@ -89,7 +89,7 @@ export function LoginPage() {
             ) : null}
 
             <Link to="/" className="mt-8 inline-flex text-sm font-semibold text-bapi-jade underline-offset-4 hover:underline">
-              Preview the dashboard shell
+              Continue to the public dashboard
             </Link>
           </section>
         </div>

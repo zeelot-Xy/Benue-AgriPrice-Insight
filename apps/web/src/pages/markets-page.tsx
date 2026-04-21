@@ -28,13 +28,13 @@ export function MarketsPage() {
 
   return (
     <div className="grid gap-4 md:gap-6">
-      <SectionCard
-        eyebrow="Selected Markets"
-        title="The four representative Benue markets in the project scope"
-        description="Each market card keeps the scope explicit and helps the final-year project avoid uncontrolled expansion."
+        <SectionCard
+          eyebrow="Selected Markets"
+          title="The four representative Benue markets in the project scope"
+          description="Each market card keeps the scope explicit and helps the final-year project avoid uncontrolled expansion."
         action={
           <StatusPill tone={data.source === "live" ? "jade" : "mint"}>
-            {data.source === "live" ? "Live Markets" : "Fallback Demo"}
+            {data.source === "live" ? "Live Market Data" : "Offline Snapshot"}
           </StatusPill>
         }
       >
@@ -59,7 +59,7 @@ export function MarketsPage() {
         <SectionCard
           eyebrow="Comparative Snapshot"
           title="Current cross-market commodity view"
-          description="The chart is shaped for fast discussion during defense: one market set, one controlled set of commodities, one explainable comparison layer."
+          description="The chart highlights how selected commodities perform across the approved Benue markets within one controlled comparison view."
         >
           <div className="h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -79,7 +79,7 @@ export function MarketsPage() {
         <SectionCard
           eyebrow="Seasonality Notes"
           title="Monthly explainers that stay readable"
-          description={`${data.note} These notes preview the kind of textual interpretation that will sit beside charts and metrics in the finished dashboard.`}
+          description={`${data.note} These notes turn the chart patterns into clear monthly interpretation for non-technical users.`}
         >
           <div className="grid gap-3">
             {data.seasonalityInsights.map((item) => (
