@@ -1,20 +1,16 @@
 # Certification Page
 
 ## Placeholder-Ready Version
-This is to certify that this project titled **“Design and Implementation of a Web-Based Agricultural Market Price Monitoring and Analysis System for Benue State”** was carried out by **[Your Full Name]**, matriculation number **[Matric Number]**, in the Department of **[Department Name]**, **[Institution Name]**, under the supervision of **[Supervisor Full Name]**.
 
-This project has been read and approved as meeting the requirements for the award of **[Degree Name]**.
+This is to certify that this project titled **“Design and Implementation of a Web-Based Agricultural Market Price Monitoring and Analysis System for Benue State”** was carried out by **ABAH MICHAEL ABAH\*, matriculation number **22/57111/UE**, in the Department of **COMPUTER SCIENCE**, **JOSEPH SARWUAN TARKA UNIVERSITY**, under the supervision of **DR. E. OGALA\*\*.
 
-Supervisor Signature: ____________________  
-Name: **[Supervisor Full Name]**  
+This project has been read and approved as meeting the requirements for the award of **BACHELOR OF SCIENCE**.
+
+Supervisor Signature: **\*\*\*\***\_\_\_\_**\*\*\*\***  
+Name: **DR. E. OGALA**  
 Date: **[Date]**
 
-Head of Department Signature: ____________________  
+Head of Department Signature: **\*\*\*\***\_\_\_\_**\*\*\*\***  
 Name: **[HOD Full Name]**  
 Date: **[Date]**
 
-## Personal Actions Required
-- Replace all placeholders with institution-approved details.
-- Replace the wording if your school has a mandatory certification template.
-- Insert real names, dates, and signatures only in your final submission copy.
-- See `docs/references/report-prelim-pages-reference.md` and `docs/references/document-edit-actions.md`.

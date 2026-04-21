@@ -6,8 +6,8 @@ This file is the single checklist of manual actions you must personally complete
 ## Manual Action Tracker
 | Action Needed | Target Document(s) | What You Must Do | Can Placeholder Remain for Demo? | Must Replace Before Final Submission? |
 | --- | --- | --- | --- | --- |
-| Insert personal details | `docs/academic/report-title-page.md` | Replace `[Your Full Name]`, `[Matric Number]`, and other personal placeholders | Yes | Yes |
-| Insert institutional details | `docs/academic/report-title-page.md`, `docs/academic/certification-page.md`, `docs/academic/acknowledgement.md` | Replace institution, department, degree, supervisor, and HOD placeholders | Yes | Yes |
+
+| Insert institutional details , `docs/academic/certification-page.md`, `docs/academic/acknowledgement.md` | Replace institution, department, degree, supervisor, and HOD placeholders | Yes | Yes |
 | Apply school-approved certification wording | `docs/academic/certification-page.md` | Replace generic text with your department's official template if required | Yes | Yes |
 | Personalize dedication | `docs/academic/dedication.md` | Write your actual dedication or remove the page if not required | Yes | Yes |
 | Finalize acknowledgment names | `docs/academic/acknowledgement.md` | Add correct names and personalized wording | Yes | Yes |

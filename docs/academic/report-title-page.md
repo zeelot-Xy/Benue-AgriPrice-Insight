@@ -1,23 +1,17 @@
 # Report Title Page
 
-## Placeholder-Ready Version
 Use this file as the source text for your final report title page.
 
-**[Institution Name]**  
-**[Faculty Name]**  
-**[Department Name]**
+**JOSEPH SARWUAN TARKA UNIVERSITY, MAKURDI**  
+**PHYSICAL SCIENCES**  
+**COMPUTER SCIENCE**
 
 ### DESIGN AND IMPLEMENTATION OF A WEB-BASED AGRICULTURAL MARKET PRICE MONITORING AND ANALYSIS SYSTEM FOR BENUE STATE
 
 By  
-**[Your Full Name]**  
-**[Matric Number]**
+**ABAH MICHAEL ABAH**  
+**22/57111/UE**
 
-A project report submitted to the **[Department Name]**, **[Institution Name]**, in partial fulfillment of the requirements for the award of **[Degree Name]**.
+A project report submitted to the Department of **COMPUTER SCIENCE**, **JOSEPH SARWUAN TARKA UNIVERSITY**, in partial fulfillment of the requirements for the award of **BACHELOR OF SCIENCE**.
 
-**[Month, Year]**
-
-## Personal Actions Required
-- Replace all bracketed placeholders with your actual personal and institutional details.
-- Adjust capitalization and spacing to match your department's approved title-page format.
-- See `docs/references/report-prelim-pages-reference.md` and `docs/references/document-edit-actions.md`.
+**SEPTEMBER, 2026**
