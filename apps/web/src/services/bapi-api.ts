@@ -224,6 +224,8 @@ type PublicPriceUploadResponse = {
   message: string;
 };
 
+type PublicPriceManualEntryResponse = PublicPriceUploadResponse;
+
 type PendingSubmissionBatchesResponse = {
   count: number;
   items: SubmissionBatch[];
@@ -456,6 +458,25 @@ export async function submitPublicPriceUpload(input: {
   });
 }
 
+export async function submitPublicPriceManualEntry(input: {
+  fileName?: string;
+  submitterName?: string;
+  submitterEmail?: string;
+  rows: Array<{
+    marketCode: string;
+    commoditySlug: string;
+    priceDate: string;
+    price: number;
+    unit: string;
+    sourceNote?: string;
+  }>;
+}) {
+  return apiFetch<PublicPriceManualEntryResponse>("/submissions/public-entry", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+}
+
 export async function getPendingSubmissionBatches(limit = 10) {
   return fetchJson<PendingSubmissionBatchesResponse>(
     `/submissions/pending?limit=${limit}`,
@@ -504,8 +525,17 @@ export async function getUploadPageData() {
         note: "Only the four approved Benue markets and eight approved commodities are accepted.",
       },
       scopeSummary: {
-        markets: markets.map((item) => `${item.name} (${item.code})`),
-        commodities: commodities.map((item) => item.name),
+        markets: markets.map((item) => ({
+          id: item.id,
+          name: item.name,
+          code: item.code,
+        })),
+        commodities: commodities.map((item) => ({
+          id: item.id,
+          name: item.name,
+          slug: item.slug,
+          defaultUnit: item.defaultUnit,
+        })),
       },
     };
   } catch {
@@ -526,16 +556,21 @@ export async function getUploadPageData() {
         note: "Only the four approved Benue markets and eight approved commodities are accepted.",
       },
       scopeSummary: {
-        markets: ["Makurdi (MKD)", "Gboko (GBK)", "Zaki Biam (ZKB)", "Otukpo (OTP)"],
+        markets: [
+          { id: 1, name: "Makurdi", code: "MKD" },
+          { id: 2, name: "Gboko", code: "GBK" },
+          { id: 3, name: "Zaki Biam", code: "ZKB" },
+          { id: 4, name: "Otukpo", code: "OTP" },
+        ],
         commodities: [
-          "Yam",
-          "Cassava",
-          "Rice",
-          "Maize",
-          "Beans",
-          "Soybean",
-          "Millet",
-          "Sorghum",
+          { id: 1, name: "Yam", slug: "yam", defaultUnit: "bag" },
+          { id: 2, name: "Cassava", slug: "cassava", defaultUnit: "bag" },
+          { id: 3, name: "Rice", slug: "rice", defaultUnit: "bag" },
+          { id: 4, name: "Maize", slug: "maize", defaultUnit: "bag" },
+          { id: 5, name: "Beans", slug: "beans", defaultUnit: "bag" },
+          { id: 6, name: "Soybean", slug: "soybean", defaultUnit: "bag" },
+          { id: 7, name: "Millet", slug: "millet", defaultUnit: "bag" },
+          { id: 8, name: "Sorghum", slug: "sorghum", defaultUnit: "bag" },
         ],
       },
     };

@@ -13,6 +13,7 @@ import {
   importPricesCsv,
   getMarketData,
   rejectSubmissionBatch,
+  submitPublicPriceManualEntry,
   submitPublicPriceUpload,
 } from "../services/bapi-api";
 import {
@@ -116,6 +117,17 @@ export function usePublicPriceUpload() {
 
   return useMutation({
     mutationFn: submitPublicPriceUpload,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["pending-submissions"] });
+    },
+  });
+}
+
+export function usePublicPriceManualEntry() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: submitPublicPriceManualEntry,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["pending-submissions"] });
     },
