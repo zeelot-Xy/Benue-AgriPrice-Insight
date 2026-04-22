@@ -7,7 +7,6 @@ The project must progress in strict order so that the system remains feasible, e
 - Outputs:
   - project identity
   - locked scope
-  - monorepo scaffold
   - initial academic documents
 - Exit criteria:
   - repository initialized
@@ -30,28 +29,26 @@ The project must progress in strict order so that the system remains feasible, e
   - CSV format definition
   - sample and seed data strategy
   - data cleaning rules
-- Dependencies:
-  - requires stable scope and data model assumptions
 - Exit criteria:
   - sample data strategy accepted
   - CSV shape defined for import
 
-## Phase 3: Git Workflow Discipline and Monorepo Structure Refinement
+## Phase 3: Git Workflow Discipline and Repository Structure Refinement
 - Outputs:
   - branch strategy
   - commit conventions
-  - package organization refinement
+  - repository organization refinement
 - Exit criteria:
   - engineering workflow agreed
-  - repo structure ready for service bootstrapping
+  - structure ready for service bootstrapping
 
 ## Phase 4: Local Environment Setup
 - Outputs:
   - Docker Compose plan
-  - bootstrapped frontend, backend, and ML service
+  - bootstrapped frontend and backend
   - environment file templates
 - Exit criteria:
-  - all services can start locally
+  - application services can start locally
 
 ## Phase 5: Database Modeling with Prisma Schema
 - Outputs:
@@ -80,20 +77,21 @@ The project must progress in strict order so that the system remains feasible, e
 - Exit criteria:
   - insights are generated with human-readable explanations
 
-## Phase 8: ML Layer with FastAPI
+## Phase 8: Architecture Simplification and Service Realignment
 - Outputs:
-  - forecast endpoint
-  - training and inference workflow
-  - integration guardrails
+  - retirement of the forecasting stack
+  - simplified backend/frontend repository structure
+  - tooling and documentation alignment
 - Exit criteria:
-  - forecasts can be requested for eligible series
+  - the project runs without any ML dependency
+  - repository structure matches the active system
 
 ## Phase 9: Frontend UI Implementation
 - Outputs:
   - themed interface
   - grid-and-gradient visual treatment
   - dashboard pages
-  - admin data-entry views
+  - admin and public data-entry views
 - Exit criteria:
   - UI matches project theme and supports core flows
 
@@ -110,7 +108,7 @@ The project must progress in strict order so that the system remains feasible, e
   - API tests
   - UI behavior checks
   - edge-case handling
-  - import validation testing
+  - import and submission validation testing
 - Exit criteria:
   - core features verified against expected behavior
 

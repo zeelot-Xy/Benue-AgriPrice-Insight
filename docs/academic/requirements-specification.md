@@ -4,23 +4,25 @@
 This document defines the software requirements for BAPI in a traceable, implementation-oriented, and academically defendable form.
 
 ## Scope Context
-The requirements in this document apply only to the approved Benue State project scope, four markets, eight commodities, and the two-user-role model.
+The requirements in this document apply only to the approved Benue State project scope, four markets, eight commodities, and the implemented access model of public viewing, public submission, and admin-controlled publishing.
 
 ## Stakeholders
 - Farmers and producers
 - Commodity traders
 - Policymakers and analysts
+- Public contributors
 - Admin operator
 - Project supervisor and examiners
 
 ## User Roles
 ### Admin
 - Authenticated manager of master data and price records
-- Responsible for uploads, manual entry, corrections, and operational review
+- Responsible for uploads, manual entry, corrections, and moderation decisions
 
 ### Viewer/Farmer
-- Read-only consumer of dashboards and insight outputs
-- Does not modify stored records
+- Consumer of dashboards and insight outputs
+- May submit proposed price updates through the public contribution workflow
+- Does not directly publish official records
 
 ## Functional Requirements
 ### FR-01 Admin Authentication
@@ -29,8 +31,8 @@ The requirements in this document apply only to the approved Benue State project
 - Acceptance note: unauthenticated requests to admin-only endpoints must be rejected.
 
 ### FR-02 Role-Based Access Control
-- The system shall separate write privileges from read-only access.
-- The system shall ensure that viewers cannot modify system data.
+- The system shall separate write privileges from public viewing and submission privileges.
+- The system shall ensure that non-admin users cannot directly publish system data.
 
 ### FR-03 Market Reference Management
 - The system shall store and expose the four approved markets.
@@ -42,48 +44,49 @@ The requirements in this document apply only to the approved Benue State project
 - The system shall prevent duplicate commodity definitions.
 - The system shall support metadata such as slug and default unit.
 
-### FR-05 Manual Price Entry
+### FR-05 Admin Manual Price Entry
 - The system shall allow admins to enter a price record manually.
 - Each price record shall include commodity, market, date, price, unit, and optional source note.
 - The system shall reject incomplete or invalid price records.
 
-### FR-06 CSV Import
+### FR-06 Admin CSV Import
 - The system shall allow admins to upload CSV files for batch import.
 - The system shall validate CSV headers and row-level field values.
 - The system shall report total rows, successful rows, and failed rows.
 - The system shall preserve import-batch traceability.
 
-### FR-07 Historical Record Query
+### FR-07 Public Price Submission
+- The system shall allow public users to submit price updates through CSV upload or guided form entry.
+- The system shall place public submissions into a review queue rather than publishing them immediately.
+- The system shall allow an admin to approve or reject queued submissions.
+- Acceptance note: unapproved submissions must not affect dashboard statistics or analytics.
+
+### FR-08 Historical Record Query
 - The system shall provide filtered retrieval of price records by market, commodity, and date range.
 - The system shall support chronological views suitable for charts and reports.
 
-### FR-08 Dashboard Summary
-- The system shall display summary cards and charts based on stored records.
+### FR-09 Dashboard Summary
+- The system shall display summary cards and charts based on approved records.
 - The system shall allow users to view selected markets and commodities over time.
 
-### FR-09 Market Comparison
+### FR-10 Market Comparison
 - The system shall compare prices of the same commodity across the four markets.
 - The system shall compute and display highest, lowest, spread, and state average values.
 
-### FR-10 Trend Detection
+### FR-11 Trend Detection
 - The system shall classify price movement as upward, downward, or stable using explainable rules.
 - The system shall provide the compared values and the reason for the classification.
 
-### FR-11 Alerts
+### FR-12 Alerts
 - The system shall generate alerts when a configured week-over-week threshold is exceeded.
 - The system shall explain which values triggered the alert.
 
-### FR-12 Seasonality Insight
+### FR-13 Seasonality Insight
 - The system shall summarize recurring monthly or seasonal patterns when sufficient historical records exist.
 - The system shall avoid claiming seasonality when available data is insufficient.
 
-### FR-13 State Average
+### FR-14 State Average
 - The system shall compute a state average price for each commodity using the four selected markets.
-
-### FR-14 Forecast Request
-- The system shall support optional forecast generation through the ML microservice.
-- The system shall keep forecast outputs separate from observed historical data.
-- The system shall show explanatory context with forecast output.
 
 ### FR-15 Reporting Support
 - The system shall provide outputs suitable for screenshots, demos, and final report discussion.
@@ -91,7 +94,7 @@ The requirements in this document apply only to the approved Benue State project
 ## Non-Functional Requirements
 ### NFR-01 Explainability
 - Every rule-based result shall include text that explains the result.
-- Forecast outputs shall be clearly labeled as estimates.
+- Moderation decisions shall be traceable and understandable.
 
 ### NFR-02 Maintainability
 - The system shall use layered architecture and service-oriented separation.
@@ -110,14 +113,14 @@ The requirements in this document apply only to the approved Benue State project
 - Charts and summaries shall use readable labels and visually consistent styling.
 
 ### NFR-06 Portability
-- The application stack shall be runnable locally through Docker Compose in later phases.
+- The application stack shall be runnable locally through Docker Compose.
 
 ### NFR-07 Scope Discipline
 - The implementation shall not extend beyond the approved domain scope without formal review.
 
 ## Assumptions
 - Historical data will be manually curated or imported from CSV.
-- Weekly updates will be entered by an admin.
+- Weekly updates will be entered by an admin or proposed by contributors for review.
 - Users will access the system through standard web browsers.
 
 ## Constraints

@@ -1,105 +1,76 @@
 # API Boundaries
 
 ## Purpose
-This document defines the main backend resource groups and responsibility boundaries. It is intentionally stable at the resource level without prematurely fixing every request or response shape.
+This document defines the main backend resource areas and their responsibilities.
 
 ## Boundary Principles
-- Authentication protects administrative write operations.
-- Validation belongs in the backend, not the frontend alone.
-- Analytical endpoints return both numbers and explanations.
-- Forecasting remains an optional integration boundary.
+- The backend remains the authority for validation and publication.
+- Public submission and admin moderation are explicit workflow boundaries.
+- Analytics consume approved records only.
 
-## Resource Groups
+## Resource Areas
 
-### Auth
-Purpose:
-- authenticate admin users
-- expose current-session identity where needed
+### Authentication
+Responsibilities:
+- log in admins
+- return current admin session data
 
-Expected endpoints:
-- `POST /auth/login`
-- `GET /auth/me`
+Typical endpoints:
+- `POST /api/auth/login`
+- `GET /api/auth/me`
 
 ### Markets
-Purpose:
-- expose and manage market reference data within scope
-
-Expected endpoints:
-- `GET /markets`
-- `GET /markets/:id`
-- `POST /markets`
-- `PATCH /markets/:id`
+Responsibilities:
+- expose approved market metadata
+- allow admin maintenance of market records
 
 ### Commodities
-Purpose:
-- expose and manage commodity reference data
-
-Expected endpoints:
-- `GET /commodities`
-- `GET /commodities/:id`
-- `POST /commodities`
-- `PATCH /commodities/:id`
+Responsibilities:
+- expose approved commodity metadata
+- allow admin maintenance of commodity records
 
 ### Prices
-Purpose:
-- manage historical and weekly price records
-- support filtering and import
-
-Expected endpoints:
-- `GET /prices`
-- `GET /prices/:id`
-- `POST /prices`
-- `PATCH /prices/:id`
-- `POST /prices/import`
+Responsibilities:
+- create and update official price records
+- support admin CSV import
+- return chart-ready and report-ready historical records
 
 ### Analytics
-Purpose:
-- deliver rule-based summaries and explainable insights
+Responsibilities:
+- expose trends, alerts, market comparisons, seasonality summaries, and state averages
+- return explanatory text with analytic results
 
-Expected endpoints:
-- `GET /analytics/trends`
-- `GET /analytics/alerts`
-- `GET /analytics/comparisons`
-- `GET /analytics/seasonality`
-- `GET /analytics/state-average`
+### Reports
+Responsibilities:
+- expose dashboard overview data
+- support report-friendly aggregations
 
-### Forecasts
-Purpose:
-- expose forecast request and retrieval functionality
+### Submissions
+Responsibilities:
+- accept public CSV and guided-form submissions
+- store proposed rows in a moderation queue
+- expose review and approval actions to admins
 
-Expected endpoints:
-- `GET /forecasts`
-- `POST /forecasts/run`
+Initial endpoint sequence:
+- `POST /api/submissions/csv`
+- `POST /api/submissions/manual`
+- `GET /api/submissions/pending`
+- `POST /api/submissions/:id/approve`
+- `POST /api/submissions/:id/reject`
 
-## Validation Expectations
-- All write endpoints must validate payloads with Zod.
-- Filtered read endpoints should validate query parameters.
-- CSV import endpoints must validate both file structure and row data.
+## Validation Rules
+- Requests must stay within the approved four-market and eight-commodity scope.
+- Price values must be numeric and positive.
+- Duplicate official price rows should be rejected.
+- Submission responses must clearly label pending versus approved status.
 
-## Authorization Expectations
-- Admin-only:
-  - market writes
-  - commodity writes
-  - price writes
-  - import
-- Viewer/Farmer:
-  - dashboard and analytical reads
-
-## Response Expectations
-- Analytical responses must include:
-  - numerical values
-  - time or date context
-  - explanatory text
-- Forecast responses must clearly label predictions as estimates.
-
-## Sequencing Guidance for Later Phases
-Recommended build order:
+## Delivery Order
 1. auth
 2. markets
 3. commodities
 4. prices
-5. analytics
-6. forecasts
+5. analytics and reports
+6. submissions
 
 ## Personal Actions Required
-- If your final report requires endpoint tables in a different tabular format, you can reformat this document without changing the resource boundaries.
+- If you produce an API appendix later, you may expand this document into a fuller endpoint catalogue without changing the service boundaries.

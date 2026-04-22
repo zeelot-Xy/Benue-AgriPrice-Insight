@@ -23,20 +23,10 @@ Evidence:
 - `docs/academic/scope-and-constraints.md`
 - `docs/academic/objectives-and-research-alignment.md`
 
-Academic justification:
-- the project begins with a clearly bounded problem
-- feasibility is treated as an engineering decision
-- stakeholders and system users are defined early
-
 ### 2. Requirements Analysis
 Evidence:
 - `docs/academic/requirements-specification.md`
 - `docs/academic/use-case-model.md`
-
-Academic justification:
-- the system requirements were documented before implementation
-- the Admin and Viewer roles were separated clearly
-- functional and non-functional requirements were considered
 
 ### 3. System Design
 Evidence:
@@ -45,27 +35,16 @@ Evidence:
 - `docs/architecture/api-boundaries.md`
 - `docs/architecture/repository-structure.md`
 
-Academic justification:
-- the project uses a documented architecture
-- the data model is normalized and scoped
-- subsystem boundaries are clear and defendable
-
 ### 4. Data Preparation
 Evidence:
 - `docs/academic/dataset-strategy.md`
 - `docs/architecture/csv-import-spec.md`
 - `data/raw/*.csv`
 
-Academic justification:
-- the dataset was curated intentionally
-- import structure and validation rules were defined
-- the project avoids unrealistic claims such as live nationwide real-time data
-
 ### 5. Implementation
 Evidence:
-- backend files in `apps/api`
-- frontend files in `apps/web`
-- ML files in `apps/ml`
+- backend files in `backend`
+- frontend files in `frontend`
 - Prisma files in `prisma`
 - implementation notes in `docs/architecture/*`
 
@@ -79,16 +58,11 @@ Evidence:
 - `docs/architecture/testing-and-debugging-phase11.md`
 - `scripts/smoke-check.mjs`
 
-Academic justification:
-- the system includes a repeatable verification process
-- testing was considered part of the engineering workflow, not an afterthought
-- runtime blockers are documented honestly
-
 ## Why Explainability Is Central to the Methodology
 The methodology deliberately prioritizes:
-- rule-based analysis before machine learning
+- rule-based analysis as the primary analytical approach
 - plain-language explanations alongside numeric outputs
-- forecasting as an enhancement rather than the sole analytical method
+- moderated public contribution without bypassing administrative control
 
 This is academically strong because it makes the system:
 - easier to defend
@@ -96,10 +70,8 @@ This is academically strong because it makes the system:
 - more appropriate for the project scope and available data
 
 ## Suggested Methodology Wording for the Report
-Suggested concise description:
-
-The project adopted a requirements-driven and incremental software engineering methodology. The work progressed through project definition, system analysis, architectural design, dataset preparation, phased implementation, integration, and verification. Core monitoring and explainable rule-based analysis were completed before introducing the forecasting layer, ensuring that the system remained functional, maintainable, and academically defendable even without machine learning.
+The project adopted a requirements-driven and incremental software engineering methodology. The work progressed through project definition, system analysis, architectural design, dataset preparation, phased implementation, integration, and verification. Core monitoring, moderated data management, and explainable rule-based analysis were implemented within a clear frontend-backend architecture, ensuring that the system remained functional, maintainable, and academically defendable without reliance on machine learning.
 
 ## Personal Actions Required
-- Adjust the wording of the methodology section to match your department’s preferred format.
+- Adjust the wording of the methodology section to match your department's preferred format.
 - If your school requires a named methodology model, present this as an incremental development approach grounded in analysis, design, implementation, and testing.

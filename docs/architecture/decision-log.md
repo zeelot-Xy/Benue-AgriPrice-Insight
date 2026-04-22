@@ -1,43 +1,26 @@
-# Architecture Decision Log
+# Decision Log
 
-## ADR-0001: Use a Monorepo
-- Status: Accepted
-- Context: The project contains multiple services, shared documentation, and possible shared configuration.
-- Decision: Use one repository with separate application directories and shared root standards.
-- Consequence: Easier coordination, simpler academic review, and lower setup duplication.
+## ADR-0001: Keep the Project Strictly Scoped
+- Context: Final-year projects become harder to finish and defend when scope expands too early.
+- Decision: Limit the project to Benue State, four markets, and eight commodities.
+- Consequence: The system remains feasible and testable.
 
-## ADR-0002: Prioritize Explainable Rule-Based Analytics Before ML
-- Status: Accepted
-- Context: The project must remain useful and defendable even without machine learning.
-- Decision: Deliver monitoring and deterministic analytics first, then add forecasting as an enhancement.
-- Consequence: Stronger transparency, easier testing, and safer phase progression.
+## ADR-0002: Prefer Explainable Rule-Based Analytics
+- Context: The project must remain useful and defendable through transparent logic.
+- Decision: Use deterministic analytical rules for trends, alerts, seasonality summaries, comparisons, and state averages.
+- Consequence: Outputs are easier to explain and validate academically.
 
-## ADR-0003: Restrict Domain Scope to Four Markets and Eight Commodities
-- Status: Accepted
-- Context: A wider scope risks weak implementation and poor data quality control.
-- Decision: Limit the system to four representative markets and eight important commodities.
-- Consequence: Better feasibility and clearer data governance.
+## ADR-0003: Keep Frontend and Backend as Distinct Application Layers
+- Context: The primary developer reasons more clearly with an explicit frontend-backend boundary.
+- Decision: Organize the active implementation into `frontend` and `backend`.
+- Consequence: Ownership, debugging, and maintenance become more straightforward.
 
-## ADR-0004: Separate Forecasting Into an ML Microservice
-- Status: Accepted
-- Context: Forecasting introduces dependencies and concerns different from core CRUD and analytics flows.
-- Decision: Keep forecasting in a separate FastAPI service while the main system logic remains in the backend API.
-- Consequence: Lower coupling, easier replacement, and clearer architectural explanation during defense.
+## ADR-0004: Retire Forecasting From the Final Project Baseline
+- Context: The forecasting layer increased architectural complexity, runtime dependencies, and maintenance cost without being essential to the approved project objective.
+- Decision: Remove forecasting from the final implementation baseline and keep the finished system centered on monitoring, moderated data capture, and explainable rule-based analytics.
+- Consequence: The project is easier to run, easier to defend, and easier to maintain.
 
-## ADR-0005: Use Admin Input and CSV Import Instead of Automated Collection
-- Status: Accepted
-- Context: Real-time scraping and sensor-driven data collection are outside project scope and increase complexity.
-- Decision: Use manual entry and CSV import as the controlled data acquisition model.
-- Consequence: Higher explainability, lower operational risk, and more realistic academic feasibility.
-
-## ADR-0006: Keep the Backend as the Source of Truth for Analytics
-- Status: Accepted
-- Context: Analytical consistency is harder to maintain if business logic is split between frontend and backend.
-- Decision: Perform analysis in backend services and return structured outputs to the frontend.
-- Consequence: Better maintainability, easier testing, and consistent interpretation across views.
-
-## ADR-0007: Use Mermaid for Repository-Native Diagrams First
-- Status: Accepted
-- Context: Early project phases need editable, version-controlled diagrams without waiting for external design tools.
-- Decision: Keep primary diagrams in Mermaid within Markdown documents and optionally redraw them later for final report polish.
-- Consequence: Faster iteration now and a clean path to polished visuals later.
+## ADR-0005: Allow Public Submission but Require Admin Review
+- Context: Public contribution improves practicality, but uncontrolled direct publishing would weaken data quality.
+- Decision: Route public entries through a pending submission queue reviewed by an admin.
+- Consequence: The system gains accessibility without sacrificing trust in official outputs.

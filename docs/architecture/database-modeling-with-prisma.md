@@ -1,52 +1,30 @@
 # Database Modeling with Prisma
 
 ## Purpose
-This document records the practical database-modeling decisions implemented in Phase 5 and explains how the Prisma schema maps the earlier ERD into an actual application-ready data model.
+This document explains the intent of the Prisma schema and how the database design supports the finished system.
 
 ## Modeling Goals
-- preserve the approved project scope
-- support clean reference-data seeding
-- enforce uniqueness where duplicate price records would create analytical errors
-- keep analytical and forecasting outputs separate from raw historical observations
+- preserve approved historical price records as the system's source of truth
+- keep analytical outputs and moderation records separate from raw observations
+- maintain traceability for imports and public submissions
+- enforce scope and uniqueness through schema constraints
 
-## Main Design Decisions
-### Roles as an Enum-Backed Table
-Roles are stored in a `Role` table and constrained by the `RoleName` enum. This keeps the data model explicit while still allowing relational access from `User`.
+## Core Modeling Strategy
+`PriceRecord` represents approved market observations. `AnalysisSnapshot`, `Alert`, and submission-review records are modeled separately so that analytics and moderation do not pollute the historical observation layer.
 
-### Users Prepared for Auth Later
-The `User` model is included now so Phase 6 can build on a stable auth-oriented table instead of changing the schema later.
-
-### Price Uniqueness
-`PriceRecord` is unique on:
-- `marketId`
-- `commodityId`
-- `priceDate`
-- `unit`
-
-This prevents duplicate records for the same market, commodity, date, and unit combination.
-
-### Analytical Separation
-`AnalysisSnapshot`, `Alert`, and `ForecastRun` are modeled separately from `PriceRecord`. This keeps the historical observation layer clean and makes later analytics easier to reason about.
-
-### Import Traceability
-`ImportBatch` preserves source-file level tracking and supports later reporting of success and failure counts for CSV uploads.
+## Important Modeling Decisions
+- Market and commodity reference data are separate master tables.
+- Official price data is normalized into a dedicated price table.
+- Import batches and submission batches are tracked for auditability.
+- Role and user data are separated so authorization remains explicit.
 
 ## Seed Strategy
-The Prisma seed script loads:
+The seed flow loads:
 - roles
-- one placeholder admin user
+- one admin user
 - market reference data
 - commodity reference data
-- starter price records from the Phase 2 CSV dataset
-
-## Important Constraint Reminder
-The schema intentionally models only:
-- the four approved Benue markets
-- the eight approved commodities
-- admin and viewer roles
-
-It does not introduce broader geographic or commodity scope.
+- starter sample price data
 
 ## Personal Actions Required
-- Before production-like use later, replace the seeded placeholder admin password strategy with a real hashed credential flow.
-- If your supervisor requires a printed schema table in the final report, you may derive it from `prisma/schema.prisma` and this document.
+- Before final submission, make sure the written ERD in your report matches the current Prisma schema and migration history.
