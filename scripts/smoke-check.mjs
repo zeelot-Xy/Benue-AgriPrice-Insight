@@ -2,13 +2,11 @@
 
 const apiBaseUrl = process.env.BAPI_API_BASE_URL ?? "http://localhost:8000";
 const webBaseUrl = process.env.BAPI_WEB_BASE_URL ?? "http://localhost:5173";
-const mlBaseUrl = process.env.BAPI_ML_BASE_URL ?? "http://localhost:8001";
 const adminEmail = process.env.BAPI_ADMIN_EMAIL ?? "admin@bapi.local";
 const adminPassword =
   process.env.BAPI_ADMIN_PASSWORD ?? process.env.SEED_ADMIN_PASSWORD ?? "BapiAdmin123!";
 
 const shouldSkipWeb = process.argv.includes("--skip-web");
-const shouldSkipMl = process.argv.includes("--skip-ml");
 const shouldSkipAuth = process.argv.includes("--skip-auth");
 
 function line(status, label, detail) {
@@ -52,7 +50,6 @@ async function main() {
   console.log("BAPI smoke check");
   console.log(`API: ${apiBaseUrl}`);
   console.log(`WEB: ${webBaseUrl}`);
-  console.log(`ML: ${mlBaseUrl}`);
 
   const checks = [];
 
@@ -91,17 +88,6 @@ async function main() {
     }),
   );
 
-  if (!shouldSkipMl) {
-    checks.push(
-      await runCheck("ML health", async () => {
-        const body = await fetchJson(`${mlBaseUrl}/health`);
-        return `${body.status} forecasting_enabled=${body.forecasting_enabled}`;
-      }),
-    );
-  } else {
-    line("SKIP", "ML health", "Skipped by flag");
-  }
-
   let token = null;
 
   if (!shouldSkipAuth) {
@@ -139,13 +125,6 @@ async function main() {
   } else {
     line("SKIP", "Admin login", "Skipped by flag");
   }
-
-  checks.push(
-    await runCheck("Forecast history endpoint", async () => {
-      const body = await fetchJson(`${apiBaseUrl}/api/forecasts/history?limit=3`);
-      return `${body.count} forecast run(s)`;
-    }),
-  );
 
   if (!shouldSkipWeb) {
     checks.push(
