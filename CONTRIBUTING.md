@@ -59,12 +59,9 @@ If pull requests are used later, each pull request should:
 - identify any documents updated
 - mention any data, schema, or API implications
 
-## Monorepo Ownership Guidance
-- `apps/web`: frontend UI and routing
-- `apps/api`: backend API, validation, and services
-- `apps/ml`: forecasting service only
-- `packages/config`: shared configuration when real reuse appears
-- `packages/ui`: shared UI tokens/utilities only if reuse becomes necessary
+## Repository Ownership Guidance
+- `frontend`: frontend UI, pages, state, and route handling
+- `backend`: backend API, validation, services, and database access
 - `docs`: non-code project artifacts
 - `data`: curated CSV inputs and processed data
 

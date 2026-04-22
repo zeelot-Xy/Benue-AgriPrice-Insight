@@ -4,21 +4,20 @@
 Design and Implementation of a Web-Based Agricultural Market Price Monitoring and Analysis System for Benue State
 
 ## Short Description
-BAPI is a web-based agricultural market price monitoring and analysis system designed for Benue State, Nigeria. It supports structured historical data storage, weekly price updates, visual analytics, rule-based insight generation, and optional short-term forecasting for selected commodities across selected markets.
+BAPI is a web-based agricultural market price monitoring and analysis system designed for Benue State, Nigeria. It supports structured historical data storage, weekly price updates, visual analytics, and explainable rule-based insights across selected commodities and markets.
 
 ## Problem Context
 Agricultural producers, traders, and public-sector decision-makers often rely on fragmented and informal price information. In practice, this weakens bargaining power, slows response to unusual market shifts, and makes it difficult to compare local markets over time. BAPI addresses this problem by providing a focused, explainable, and academically defendable information system for monitoring commodity prices within a tightly defined local scope.
 
 ## Project Aim
-To design and implement a web-based agricultural market price monitoring and analysis system for Benue State that captures historical and weekly agricultural market prices, supports comparison across selected markets, generates explainable analytical insights, and optionally provides short-term price forecasts.
+To design and implement a web-based agricultural market price monitoring and analysis system for Benue State that captures historical and weekly agricultural market prices, supports comparison across selected markets, and generates explainable analytical insights.
 
 ## Core Objectives
 1. Provide a reliable platform for recording historical and weekly agricultural commodity prices.
 2. Support data entry through admin manual entry and CSV import.
 3. Visualize price changes across time, commodities, and markets.
 4. Generate explainable rule-based insights such as trends, alerts, market comparisons, and seasonality summaries.
-5. Support optional forecasting as an enhancement, not as the foundation of the system.
-6. Maintain a scope that is realistic for a final-year project and strong enough for academic defense.
+5. Maintain a scope that is realistic for a final-year project and strong enough for academic defense.
 
 ## Locked Scope
 - Geographic scope: Benue State only
@@ -26,7 +25,7 @@ To design and implement a web-based agricultural market price monitoring and ana
 - Commodities: Yam, Cassava, Rice, Maize, Beans, Soybean, Millet, Sorghum
 - Users: Admin and Viewer/Farmer
 - Data capture method: manual weekly entry and CSV import
-- Analysis coverage: historical analysis, weekly monitoring, trend detection, alerts, seasonality insight, market comparison, state averages, optional forecasting
+- Analysis coverage: historical analysis, weekly monitoring, trend detection, alerts, seasonality insight, market comparison, state averages
 
 ## Explicitly Out of Scope
 - Real-time web scraping
@@ -36,12 +35,11 @@ To design and implement a web-based agricultural market price monitoring and ana
 - Autonomous decision-making without explainable logic
 
 ## Academic Positioning
-This project is intentionally scoped for feasibility, explainability, and technical defensibility. The system is useful even without machine learning because rule-based analytics provide immediate value. Forecasting is added only as an optional enhancement after the monitoring and analytics foundation is complete.
+This project is intentionally scoped for feasibility, explainability, and technical defensibility. The system focuses on weekly monitoring and rule-based analytics so that every major output remains understandable, maintainable, and easy to defend academically.
 
 ## Locked Technology Stack
 - Frontend: React 18, Vite, TypeScript, Tailwind CSS v4, Recharts, React Router v7, TanStack Query, Lucide React
 - Backend: Node.js 20, Express, TypeScript, Prisma ORM, PostgreSQL, Zod, JWT, Helmet
-- AI/ML: Python 3.11, FastAPI, pandas, scikit-learn, Prophet, joblib
 - Deployment: Docker Compose
 
 ## Visual System
@@ -53,11 +51,10 @@ This project is intentionally scoped for feasibility, explainability, and techni
 - Brand: BAPI - Benue AgriPrice Insight
 
 ## Development Philosophy
-1. Make the system work fully without AI/ML.
-2. Add rule-based analysis and explainable alerts.
-3. Introduce forecasting logic.
-4. Add optional ML enhancement for academic value.
-5. Polish the interface, report artifacts, and defense narrative.
+1. Make the system work fully with clear frontend and backend boundaries.
+2. Keep rule-based analysis and alerts explainable.
+3. Use a structure that is easy to maintain, debug, and extend.
+4. Polish the interface, report artifacts, and defense narrative.
 
 ## Documentation Map
 - `docs/academic`: academic framing, requirements, use cases, report prelim pages
@@ -68,7 +65,6 @@ This project is intentionally scoped for feasibility, explainability, and techni
 - `docs/architecture`: repository structure, system architecture, ERD, API boundaries, analysis rules
 - `docs/architecture/backend-api-development.md`: implemented backend scope and route coverage
 - `docs/architecture/rule-based-analysis-engine.md`: implemented analytics endpoints and deterministic rules
-- `docs/architecture/ml-forecasting-service.md`: implemented Prophet-based forecasting service and backend integration
 - `docs/architecture/frontend-ui-phase9.md`: implemented frontend shell, page routes, and chart-driven dashboard views
 - `docs/architecture/frontend-backend-integration-phase10.md`: implemented live frontend data integration, auth wiring, and fallback behavior
 - `docs/architecture/testing-and-debugging-phase11.md`: testing checklist, runtime blockers, and smoke-check workflow
@@ -82,10 +78,8 @@ This project is intentionally scoped for feasibility, explainability, and techni
 
 ## Repository Layout
 ```text
-apps/
-  api/            # Express backend
-  ml/             # FastAPI forecasting microservice
-  web/            # React frontend
+backend/          # Express backend
+frontend/         # React frontend
 data/
   processed/      # cleaned or transformed datasets
   raw/            # source CSV files and curated input data
@@ -95,9 +89,6 @@ docs/
   branding/       # logo and visual identity notes
   meetings/       # supervisor meeting records
   references/     # manual action trackers and external asset notes
-packages/
-  config/         # shared configuration
-  ui/             # shared UI tokens or utilities if needed later
 prisma/
   migrations/     # migration history
 scripts/          # helper scripts, imports, seeds
@@ -113,7 +104,7 @@ tests/            # integration and end-to-end tests later
 - Phase 5 completed: database modeling with Prisma schema and seed foundation
 - Phase 6 completed: backend API development for auth, reference data, prices, and reports
 - Phase 7 completed: rule-based trend, alert, seasonality, comparison, and state-average analytics
-- Phase 8 completed: FastAPI Prophet forecasting service and backend forecast history integration
+- Phase 8 retired: forecasting layer removed to keep the project focused on explainable monitoring and analysis
 - Phase 9 completed: frontend UI shell, themed pages, and chart-driven dashboard foundation
 - Phase 10 completed: live frontend-backend integration with TanStack Query and auth wiring
 - Phase 11 completed: smoke-check workflow, runtime blocker review, and testing/debugging guidance
@@ -122,13 +113,12 @@ tests/            # integration and end-to-end tests later
 - Project implementation phases complete: final personal submission tasks remain
 
 ## Current Setup Expectations
-This repository now includes the project documentation set, dataset foundation, Prisma data model, backend APIs, explainable analytics, forecasting service integration, the frontend product shell, and live frontend-backend data integration. Comprehensive testing and final hardening remain for the next phases.
+This repository now includes the project documentation set, dataset foundation, Prisma data model, backend APIs, explainable analytics, the frontend product shell, and live frontend-backend data integration.
 
 ## Engineering Rules
 - Prefer TypeScript across frontend and backend.
 - Keep business logic in service layers.
 - Keep analytics explainable with both numbers and human-readable reasons.
-- Keep forecasting separate from observed historical values.
 - Keep the project inside the approved scope at all times.
 
 ## Personal Actions Required
