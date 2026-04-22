@@ -3,6 +3,7 @@ import {
   alerts as fallbackAlerts,
   dashboardSummary,
   forecastSeries as fallbackForecastSeries,
+  allCommoditySnapshot as fallbackAllCommoditySnapshot,
   marketCards as fallbackMarketCards,
   marketComparison as fallbackMarketComparison,
   phase9Notes,
@@ -247,6 +248,17 @@ type RejectSubmissionResponse = {
 
 type IntegrationSource = "live" | "fallback";
 
+const dashboardCommodityOrder = [
+  "yam",
+  "cassava",
+  "rice",
+  "maize",
+  "beans",
+  "soybean",
+  "millet",
+  "sorghum",
+] as const;
+
 const marketDescriptions: Record<
   string,
   { focus: string; summary: string }
@@ -358,6 +370,20 @@ function buildMarketComparison(latestPrices: LatestPricesResponse) {
   }
 
   return [...byMarket.values()];
+}
+
+function buildAllCommoditySnapshot(latestPrices: LatestPricesResponse) {
+  return latestPrices
+    .map((item) => ({
+      commodity: item.commodity.name,
+      slug: item.commodity.slug,
+      averagePrice: item.stateAveragePrice,
+    }))
+    .sort(
+      (left, right) =>
+        dashboardCommodityOrder.indexOf(left.slug as (typeof dashboardCommodityOrder)[number]) -
+        dashboardCommodityOrder.indexOf(right.slug as (typeof dashboardCommodityOrder)[number]),
+    );
 }
 
 function buildSeasonalityCards(response: SeasonalityResponse) {
@@ -585,15 +611,26 @@ export async function getDashboardData() {
       fetchJson<AlertsResponse>("/analytics/alerts"),
       fetchJson<Commodity[]>("/commodities"),
     ]);
-    const priceSeries = await fetchCommoditySeries(commodities, [
-      "yam",
-      "rice",
-      "beans",
-    ]);
+    const priceSeries = await fetchCommoditySeries(commodities, [...dashboardCommodityOrder]);
 
     return {
       source: "live" as IntegrationSource,
       note: "This dashboard is currently using live system data.",
+      commodityOptions: commodities
+        .filter((commodity) =>
+          dashboardCommodityOrder.includes(
+            commodity.slug as (typeof dashboardCommodityOrder)[number],
+          ),
+        )
+        .sort(
+          (left, right) =>
+            dashboardCommodityOrder.indexOf(left.slug as (typeof dashboardCommodityOrder)[number]) -
+            dashboardCommodityOrder.indexOf(right.slug as (typeof dashboardCommodityOrder)[number]),
+        )
+        .map((commodity) => ({
+          slug: commodity.slug,
+          name: commodity.name,
+        })),
       summary: {
         totalMarkets: overview.counts.markets,
         totalCommodities: overview.counts.commodities,
@@ -602,6 +639,7 @@ export async function getDashboardData() {
         averageConfidence: "Live",
       },
       weeklyPriceSeries: combineWeeklySeries(priceSeries),
+      allCommoditySnapshot: buildAllCommoditySnapshot(latestPrices),
       marketComparison: buildMarketComparison(latestPrices),
       alerts: mapAlerts(alerts.items),
       quickActions,
@@ -617,7 +655,18 @@ export async function getDashboardData() {
         "Live updates are not available right now, so this dashboard is showing saved data.",
       ),
       summary: dashboardSummary,
+      commodityOptions: [
+        { slug: "yam", name: "Yam" },
+        { slug: "cassava", name: "Cassava" },
+        { slug: "rice", name: "Rice" },
+        { slug: "maize", name: "Maize" },
+        { slug: "beans", name: "Beans" },
+        { slug: "soybean", name: "Soybean" },
+        { slug: "millet", name: "Millet" },
+        { slug: "sorghum", name: "Sorghum" },
+      ],
       weeklyPriceSeries: fallbackWeeklyPriceSeries,
+      allCommoditySnapshot: fallbackAllCommoditySnapshot,
       marketComparison: fallbackMarketComparison,
       alerts: fallbackAlerts,
       quickActions,
@@ -663,10 +712,11 @@ export async function getMarketData() {
 
 export async function getAnalyticsData() {
   try {
-    const [alerts, seasonality, commodities] = await Promise.all([
+    const [alerts, seasonality, commodities, latestPrices] = await Promise.all([
       fetchJson<AlertsResponse>("/analytics/alerts"),
       fetchJson<SeasonalityResponse>("/analytics/seasonality"),
       fetchJson<Commodity[]>("/commodities"),
+      fetchJson<LatestPricesResponse>("/reports/latest-prices"),
     ]);
     const priceSeries = await fetchCommoditySeries(commodities, ["maize"], 40);
 
@@ -675,6 +725,7 @@ export async function getAnalyticsData() {
       note: "These analytics are based on the latest available calculations.",
       alerts: mapAlerts(alerts.items),
       seasonalityInsights: buildSeasonalityCards(seasonality),
+      allCommoditySnapshot: buildAllCommoditySnapshot(latestPrices),
       weeklyPriceSeries: combineWeeklySeries({
         maize: priceSeries.maize ?? [],
       }),
@@ -686,6 +737,7 @@ export async function getAnalyticsData() {
       ),
       alerts: fallbackAlerts,
       seasonalityInsights: fallbackSeasonalityInsights,
+      allCommoditySnapshot: fallbackAllCommoditySnapshot,
       weeklyPriceSeries: fallbackWeeklyPriceSeries,
     };
   }
