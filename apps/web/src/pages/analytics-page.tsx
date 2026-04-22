@@ -12,7 +12,7 @@ export function AnalyticsPage() {
     return (
       <QueryState
         title="Loading Analytics"
-        description="Fetching live alerts, seasonality summaries, and selected price history."
+        description="Loading alerts, seasonal patterns, and recent price movement."
       />
     );
   }
@@ -21,7 +21,7 @@ export function AnalyticsPage() {
     return (
       <QueryState
         title="Analytics Unavailable"
-        description="No analytics data could be prepared for this screen."
+        description="Analytics information is not available right now."
       />
     );
   }
@@ -31,10 +31,10 @@ export function AnalyticsPage() {
         <SectionCard
           eyebrow="Trend Detection"
           title="Explainable movement using weekly observed records"
-          description="This page emphasizes the analytical story before machine learning: trend thresholds, alert conditions, and seasonal interpretation remain readable by non-technical users."
+          description="This page shows how prices are moving using weekly records, clear alert rules, and simple explanations."
         action={
           <StatusPill tone={data.source === "live" ? "jade" : "mint"}>
-            {data.source === "live" ? "Live Analytics" : "Offline Snapshot"}
+            {data.source === "live" ? "Live Data" : "Saved Data"}
           </StatusPill>
         }
       >
@@ -67,7 +67,7 @@ export function AnalyticsPage() {
         <SectionCard
           eyebrow="Alert Logic"
           title="Severity and reasoning cards"
-          description="Each alert combines a concise severity signal with a plain-language explanation so users can understand what changed and why it matters."
+          description="Each alert shows the size of the change and explains why it matters."
         >
           <div className="grid gap-3">
             {data.alerts.map((alert) => (
@@ -88,7 +88,7 @@ export function AnalyticsPage() {
         <SectionCard
           eyebrow="Monthly Reading"
           title="Seasonality interpretation cards"
-          description={`${data.note} The UI keeps textual interpretation beside visual evidence so the dashboard remains useful even for users who do not rely only on charts.`}
+          description={`${data.note} Each note explains the chart in plain language.`}
         >
           <div className="grid gap-3">
             {data.seasonalityInsights.map((item) => (

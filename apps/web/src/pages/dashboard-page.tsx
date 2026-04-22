@@ -30,7 +30,7 @@ export function DashboardPage() {
     return (
       <QueryState
         title="Loading Dashboard"
-        description="Fetching reports, alert summaries, and recent price records from the BAPI backend."
+        description="Loading the latest market summary, alerts, and weekly price records."
       />
     );
   }
@@ -39,7 +39,7 @@ export function DashboardPage() {
     return (
       <QueryState
         title="Dashboard Unavailable"
-        description="No dashboard data could be prepared for this view."
+        description="Dashboard information is not available right now."
       />
     );
   }
@@ -50,25 +50,25 @@ export function DashboardPage() {
         <MetricCard
           label="Approved Markets"
           value={data.summary.totalMarkets}
-          detail="The dashboard remains intentionally fixed to four representative Benue markets."
+          detail="This dashboard tracks four key markets across Benue State."
           icon={<Landmark className="h-5 w-5" />}
         />
         <MetricCard
           label="Tracked Commodities"
           value={data.summary.totalCommodities}
-          detail="Only the eight academically approved commodities are visualized and analysed."
+          detail="Prices are monitored for eight major commodities."
           icon={<Sprout className="h-5 w-5" />}
         />
         <MetricCard
           label="Active Alerts"
           value={data.summary.activeAlerts}
-          detail="Alert counts reflect explainable threshold logic rather than opaque scoring."
+          detail="Alerts show where price movement needs attention."
           icon={<BadgeAlert className="h-5 w-5" />}
         />
         <MetricCard
           label="Latest Week Ending"
           value={data.summary.latestWeekEnding}
-          detail="The UI is organized around weekly monitoring rather than real-time feeds."
+          detail="Prices are updated as weekly records, not live feeds."
           icon={<Activity className="h-5 w-5" />}
         />
       </section>
@@ -77,10 +77,10 @@ export function DashboardPage() {
         <SectionCard
           eyebrow="Weekly Movement"
           title="Commodity trajectory across recent weekly entries"
-          description="This view brings together recent weekly movement across key commodities so users can compare direction, speed, and volatility at a glance."
+          description="Use this chart to compare how key commodity prices have moved in recent weeks."
           action={
             <StatusPill tone={data.source === "live" ? "jade" : "mint"}>
-              {data.source === "live" ? "Live Data" : "Offline Snapshot"}
+              {data.source === "live" ? "Live Data" : "Saved Data"}
             </StatusPill>
           }
         >
@@ -102,7 +102,7 @@ export function DashboardPage() {
         <SectionCard
           eyebrow="Quick Actions"
           title="Core tasks across the monitoring workflow"
-          description="These actions reflect the main product journey: update weekly prices, review signals, compare markets, and examine projections."
+          description="These are the main things people do in BAPI: update prices, review alerts, compare markets, and check forecasts."
         >
           <div className="grid gap-3">
             {data.quickActions.map((item) => (
@@ -131,7 +131,7 @@ export function DashboardPage() {
         <SectionCard
           eyebrow="Alert Stream"
           title="Rule-based movement explanations"
-          description="Alerts remain explainable and plain-language first, with severity labels that can be defended in academic review."
+          description="Each alert explains what changed, where it happened, and how serious it looks."
         >
           <div className="grid gap-3">
             {data.alerts.map((alert) => (
@@ -158,7 +158,7 @@ export function DashboardPage() {
         <SectionCard
           eyebrow="Market Comparison"
           title="Cross-market reading for soybean, millet, and sorghum"
-          description="This panel helps farmers, traders, and decision-makers see where prices are strongest and where state-level differences are emerging."
+          description="Compare selected commodities across the four markets to spot where prices are stronger or weaker."
         >
           <div className="h-[320px]">
             <ResponsiveContainer width="100%" height="100%">

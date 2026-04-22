@@ -12,7 +12,7 @@ export function MarketsPage() {
     return (
       <QueryState
         title="Loading Markets"
-        description="Fetching approved market records and comparison data from the backend."
+        description="Loading market profiles, comparisons, and seasonal notes."
       />
     );
   }
@@ -21,7 +21,7 @@ export function MarketsPage() {
     return (
       <QueryState
         title="Markets Unavailable"
-        description="The markets view could not prepare any data."
+        description="Market information is not available right now."
       />
     );
   }
@@ -31,10 +31,10 @@ export function MarketsPage() {
         <SectionCard
           eyebrow="Selected Markets"
           title="The four representative Benue markets in the project scope"
-          description="Each market card keeps the scope explicit and helps the final-year project avoid uncontrolled expansion."
+          description="Each card gives a quick picture of one of the four markets covered by this platform."
         action={
           <StatusPill tone={data.source === "live" ? "jade" : "mint"}>
-            {data.source === "live" ? "Live Market Data" : "Offline Snapshot"}
+            {data.source === "live" ? "Live Data" : "Saved Data"}
           </StatusPill>
         }
       >
@@ -59,7 +59,7 @@ export function MarketsPage() {
         <SectionCard
           eyebrow="Comparative Snapshot"
           title="Current cross-market commodity view"
-          description="The chart highlights how selected commodities perform across the approved Benue markets within one controlled comparison view."
+          description="This chart lets you compare selected commodity prices across the four markets at a glance."
         >
           <div className="h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -79,7 +79,7 @@ export function MarketsPage() {
         <SectionCard
           eyebrow="Seasonality Notes"
           title="Monthly explainers that stay readable"
-          description={`${data.note} These notes turn the chart patterns into clear monthly interpretation for non-technical users.`}
+          description={`${data.note} These notes explain the monthly pattern in simple terms.`}
         >
           <div className="grid gap-3">
             {data.seasonalityInsights.map((item) => (
@@ -89,7 +89,7 @@ export function MarketsPage() {
                   <StatusPill tone="jade">{item.month}</StatusPill>
                 </div>
                 <p className="mt-3 text-sm text-bapi-evergreen/78">
-                  Average price: <span className="font-semibold">{item.averagePrice}</span>
+                  Typical price: <span className="font-semibold">{item.averagePrice}</span>
                 </p>
                 <p className="mt-2 text-sm leading-6 text-bapi-evergreen/68">{item.note}</p>
               </article>

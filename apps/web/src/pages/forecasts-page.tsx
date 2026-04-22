@@ -22,7 +22,7 @@ export function ForecastsPage() {
     return (
       <QueryState
         title="Loading Forecasts"
-        description="Preparing the selected forecast scenario from the backend and ML service."
+        description="Loading the latest forecast view for this market and commodity."
       />
     );
   }
@@ -31,7 +31,7 @@ export function ForecastsPage() {
     return (
       <QueryState
         title="Forecasts Unavailable"
-        description="No forecast data could be prepared for this screen."
+        description="Forecast information is not available right now."
       />
     );
   }
@@ -41,10 +41,10 @@ export function ForecastsPage() {
         <SectionCard
           eyebrow="Forecast Overview"
           title="Short-term projection with a clear separation from actual prices"
-          description="This screen is intentionally explicit that forecasting is advisory. It sits on top of historical monitoring, not in place of it."
+          description="This forecast is a guide based on past records. It supports the weekly price history instead of replacing it."
         action={
           <StatusPill tone={data.source === "live" ? "evergreen" : "mint"}>
-            {data.source === "live" ? "Forecast Service" : "Offline Snapshot"}
+            {data.source === "live" ? "Live Forecast" : "Saved Forecast"}
           </StatusPill>
         }
       >
@@ -85,7 +85,7 @@ export function ForecastsPage() {
                 Actual and projected values are visually separated.
               </h3>
               <p className="mt-3 text-sm leading-6 text-bapi-evergreen/68">
-                The dashed jade line indicates projected movement, while the deep evergreen line shows actual observed prices only.
+                The dashed jade line shows the projected path, while the deep evergreen line shows real recorded prices.
               </p>
             </article>
 
