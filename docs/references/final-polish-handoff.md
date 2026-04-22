@@ -1,14 +1,13 @@
 # Final Polish Handoff
 
 ## Purpose
-This note summarizes the state of the project at the end of Phase 13 and clarifies what remains as personal finalization work before submission and defense.
+This note summarizes the state of the project and clarifies what remains as personal finalization work before submission and defense.
 
 ## What Is Complete
 - project definition and scope are documented
 - requirements, use cases, architecture, ERD, and dataset strategy are documented
 - backend API is implemented
 - rule-based analytics are implemented
-- forecasting service is implemented
 - frontend UI is implemented
 - frontend-backend integration is implemented
 - smoke-check workflow exists
@@ -16,7 +15,6 @@ This note summarizes the state of the project at the end of Phase 13 and clarifi
 
 ## What Still Depends on You
 - real `.env` setup
-- local ML dependency installation if needed outside Docker
 - final runtime verification on your machine
 - final screenshots
 - final logo assets
@@ -36,7 +34,3 @@ This note summarizes the state of the project at the end of Phase 13 and clarifi
 - do not try to add major new features now
 - prioritize clarity, evidence, screenshots, and defense confidence
 - use the existing scope discipline as part of your defense, not something to apologize for
-
-## Personal Actions Required
-- Treat this project as finalizing, not expanding.
-- Use this handoff note together with the submission checklist and demo runbook during your last review cycle.

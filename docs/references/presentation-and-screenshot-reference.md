@@ -1,14 +1,15 @@
 # Presentation and Screenshot Reference
 
 ## Purpose
-This file tracks visual artifacts that cannot be created meaningfully until the system interface and analytics are implemented.
+This file tracks visual artifacts that cannot be created meaningfully until the system interface is fully stable.
 
 ## Assets Still Needed Later
 - Login page screenshot
 - Dashboard overview screenshot
 - Market comparison chart screenshot
 - Trend and alert panel screenshot
-- Forecast view screenshot if forecasting is implemented
+- Upload page screenshot
+- Admin review queue screenshot
 - Final report cover using the approved logo
 
 ## Where They Belong
@@ -19,7 +20,7 @@ This file tracks visual artifacts that cannot be created meaningfully until the 
 ## Manual Steps
 1. Wait until the frontend and backend are integrated and visually stable.
 2. Capture screenshots that clearly reflect the project theme and major features.
-3. Use clean sample data and avoid inconsistent placeholder states.
+3. Use clean sample data and avoid inconsistent draft states.
 4. Store or reference the final selected screenshots in your presentation or report workspace.
 
 ## Placeholder Acceptability

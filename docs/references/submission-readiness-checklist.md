@@ -4,7 +4,7 @@
 This checklist summarizes what must be complete before final academic submission, report printing, presentation, and defense.
 
 ## Report Content
-- Title page placeholders replaced
+- Title page details confirmed
 - Certification page updated with department-approved wording
 - Dedication finalized or removed if not required
 - Acknowledgement personalized
@@ -22,7 +22,7 @@ This checklist summarizes what must be complete before final academic submission
 - Final BAPI logo assets prepared
 - Dashboard screenshots captured
 - Analytics screenshots captured
-- Forecast screenshots captured
+- Upload screenshots captured
 - Admin screenshots captured
 - Login screenshot captured
 
@@ -32,7 +32,6 @@ This checklist summarizes what must be complete before final academic submission
 - PostgreSQL available
 - API starts successfully
 - Frontend starts successfully
-- ML service starts successfully
 - `npm run smoke:check` passes or known exceptions are documented
 
 ## Defense Readiness
