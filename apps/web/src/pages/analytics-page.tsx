@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from "react";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { QueryState } from "../components/ui/query-state";
@@ -7,6 +8,36 @@ import { useAnalyticsData } from "../hooks/use-phase9-data";
 
 export function AnalyticsPage() {
   const { data, isLoading } = useAnalyticsData();
+  const [activeCommodityIndex, setActiveCommodityIndex] = useState(0);
+  const commodityColors = useMemo(
+    () => ({
+      yam: "#0f3a2f",
+      cassava: "#5f7f6e",
+      rice: "#34c9a2",
+      maize: "#8fcf8c",
+      beans: "#82b59d",
+      soybean: "#1f7a66",
+      millet: "#b3a06b",
+      sorghum: "#7d8f63",
+    }),
+    [],
+  );
+
+  useEffect(() => {
+    setActiveCommodityIndex(0);
+  }, [data?.commodityOptions]);
+
+  useEffect(() => {
+    if (!data?.commodityOptions?.length || data.commodityOptions.length === 1) {
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      setActiveCommodityIndex((current) => (current + 1) % data.commodityOptions.length);
+    }, 15000);
+
+    return () => window.clearInterval(interval);
+  }, [data?.commodityOptions]);
 
   if (isLoading) {
     return (
@@ -26,6 +57,12 @@ export function AnalyticsPage() {
     );
   }
 
+  const activeCommodity =
+    data.commodityOptions[activeCommodityIndex] ?? data.commodityOptions[0];
+  const activeCommodityColor =
+    commodityColors[activeCommodity?.slug as keyof typeof commodityColors] ?? "#34c9a2";
+  const fillId = `${activeCommodity?.slug ?? "commodity"}-fill`;
+
   return (
     <div className="grid gap-4 md:gap-6">
         <SectionCard
@@ -38,13 +75,33 @@ export function AnalyticsPage() {
           </StatusPill>
         }
       >
+        <div className="mb-5 flex flex-wrap gap-2">
+          {data.commodityOptions.map((commodity, index) => {
+            const isActive = index === activeCommodityIndex;
+
+            return (
+              <span
+                key={commodity.slug}
+                className={[
+                  "rounded-full px-4 py-2 text-sm font-semibold transition",
+                  isActive
+                    ? "bg-bapi-evergreen text-white"
+                    : "bg-white/60 text-bapi-evergreen/60",
+                ].join(" ")}
+              >
+                {commodity.name}
+              </span>
+            );
+          })}
+        </div>
+
         <div className="h-[320px]">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={data.weeklyPriceSeries}>
               <defs>
-                <linearGradient id="maizeFill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#34c9a2" stopOpacity={0.6} />
-                  <stop offset="95%" stopColor="#34c9a2" stopOpacity={0.02} />
+                <linearGradient id={fillId} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={activeCommodityColor} stopOpacity={0.6} />
+                  <stop offset="95%" stopColor={activeCommodityColor} stopOpacity={0.02} />
                 </linearGradient>
               </defs>
               <CartesianGrid stroke="rgba(15,58,47,0.08)" vertical={false} />
@@ -53,9 +110,10 @@ export function AnalyticsPage() {
               <Tooltip />
               <Area
                 type="monotone"
-                dataKey="maize"
-                stroke="#34c9a2"
-                fill="url(#maizeFill)"
+                dataKey={activeCommodity?.slug}
+                name={activeCommodity?.name}
+                stroke={activeCommodityColor}
+                fill={`url(#${fillId})`}
                 strokeWidth={3}
               />
             </AreaChart>

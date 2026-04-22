@@ -718,23 +718,46 @@ export async function getAnalyticsData() {
       fetchJson<Commodity[]>("/commodities"),
       fetchJson<LatestPricesResponse>("/reports/latest-prices"),
     ]);
-    const priceSeries = await fetchCommoditySeries(commodities, ["maize"], 40);
+    const priceSeries = await fetchCommoditySeries(commodities, [...dashboardCommodityOrder], 40);
 
     return {
       source: "live" as IntegrationSource,
       note: "These analytics are based on the latest available calculations.",
+      commodityOptions: commodities
+        .filter((commodity) =>
+          dashboardCommodityOrder.includes(
+            commodity.slug as (typeof dashboardCommodityOrder)[number],
+          ),
+        )
+        .sort(
+          (left, right) =>
+            dashboardCommodityOrder.indexOf(left.slug as (typeof dashboardCommodityOrder)[number]) -
+            dashboardCommodityOrder.indexOf(right.slug as (typeof dashboardCommodityOrder)[number]),
+        )
+        .map((commodity) => ({
+          slug: commodity.slug,
+          name: commodity.name,
+        })),
       alerts: mapAlerts(alerts.items),
       seasonalityInsights: buildSeasonalityCards(seasonality),
       allCommoditySnapshot: buildAllCommoditySnapshot(latestPrices),
-      weeklyPriceSeries: combineWeeklySeries({
-        maize: priceSeries.maize ?? [],
-      }),
+      weeklyPriceSeries: combineWeeklySeries(priceSeries),
     };
   } catch {
     return {
       ...buildFallbackNote(
         "Live analytics are not available right now, so this page is showing saved data.",
       ),
+      commodityOptions: [
+        { slug: "yam", name: "Yam" },
+        { slug: "cassava", name: "Cassava" },
+        { slug: "rice", name: "Rice" },
+        { slug: "maize", name: "Maize" },
+        { slug: "beans", name: "Beans" },
+        { slug: "soybean", name: "Soybean" },
+        { slug: "millet", name: "Millet" },
+        { slug: "sorghum", name: "Sorghum" },
+      ],
       alerts: fallbackAlerts,
       seasonalityInsights: fallbackSeasonalityInsights,
       allCommoditySnapshot: fallbackAllCommoditySnapshot,
