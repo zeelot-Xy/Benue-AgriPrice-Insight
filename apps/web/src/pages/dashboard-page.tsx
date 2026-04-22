@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from "react";
 import {
   Activity,
   ArrowUpRight,
@@ -25,6 +26,55 @@ import { useDashboardData } from "../hooks/use-phase9-data";
 
 export function DashboardPage() {
   const { data, isLoading } = useDashboardData();
+  const [selectedCommodities, setSelectedCommodities] = useState<string[]>([
+    "yam",
+    "rice",
+    "beans",
+  ]);
+
+  useEffect(() => {
+    if (!data?.commodityOptions?.length) {
+      return;
+    }
+
+    setSelectedCommodities((current) => {
+      const validSelection = current.filter((slug) =>
+        data.commodityOptions.some((item) => item.slug === slug),
+      );
+
+      if (validSelection.length === 3) {
+        return validSelection;
+      }
+
+      const nextSelection = [...validSelection];
+
+      for (const commodity of data.commodityOptions) {
+        if (nextSelection.length === 3) {
+          break;
+        }
+
+        if (!nextSelection.includes(commodity.slug)) {
+          nextSelection.push(commodity.slug);
+        }
+      }
+
+      return nextSelection.slice(0, 3);
+    });
+  }, [data]);
+
+  const commodityColors = useMemo(
+    () => ({
+      yam: "#0f3a2f",
+      cassava: "#5f7f6e",
+      rice: "#34c9a2",
+      maize: "#8fcf8c",
+      beans: "#82b59d",
+      soybean: "#1f7a66",
+      millet: "#b3a06b",
+      sorghum: "#7d8f63",
+    }),
+    [],
+  );
 
   if (isLoading) {
     return (
@@ -42,6 +92,24 @@ export function DashboardPage() {
         description="Dashboard information is not available right now."
       />
     );
+  }
+
+  const selectedCommodityDetails = selectedCommodities
+    .map((slug) => data.commodityOptions.find((item) => item.slug === slug))
+    .filter((item): item is { slug: string; name: string } => Boolean(item));
+
+  function toggleCommodity(slug: string) {
+    setSelectedCommodities((current) => {
+      if (current.includes(slug)) {
+        return current.length === 1 ? current : current.filter((item) => item !== slug);
+      }
+
+      if (current.length < 3) {
+        return [...current, slug];
+      }
+
+      return [...current.slice(1), slug];
+    });
   }
 
   return (
@@ -77,13 +145,35 @@ export function DashboardPage() {
         <SectionCard
           eyebrow="Weekly Movement"
           title="Commodity trajectory across recent weekly entries"
-          description="Use this chart to compare how key commodity prices have moved in recent weeks."
+          description="Use this chart to compare recent price movement. You can switch between the eight tracked commodities and keep up to three on screen at once."
           action={
             <StatusPill tone={data.source === "live" ? "jade" : "mint"}>
               {data.source === "live" ? "Live Data" : "Saved Data"}
             </StatusPill>
           }
         >
+          <div className="mb-5 flex flex-wrap gap-2">
+            {data.commodityOptions.map((commodity) => {
+              const isSelected = selectedCommodities.includes(commodity.slug);
+
+              return (
+                <button
+                  key={commodity.slug}
+                  type="button"
+                  onClick={() => toggleCommodity(commodity.slug)}
+                  className={[
+                    "rounded-full px-4 py-2 text-sm font-semibold transition",
+                    isSelected
+                      ? "bg-bapi-evergreen text-white"
+                      : "bg-white/60 text-bapi-evergreen/75 hover:bg-white/80",
+                  ].join(" ")}
+                >
+                  {commodity.name}
+                </button>
+              );
+            })}
+          </div>
+
           <div className="h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data.weeklyPriceSeries}>
@@ -91,11 +181,37 @@ export function DashboardPage() {
                 <XAxis dataKey="week" stroke="rgba(15,58,47,0.55)" />
                 <YAxis stroke="rgba(15,58,47,0.55)" />
                 <Tooltip />
-                <Line type="monotone" dataKey="yam" stroke="#0f3a2f" strokeWidth={3} dot={false} />
-                <Line type="monotone" dataKey="rice" stroke="#34c9a2" strokeWidth={2.5} dot={false} />
-                <Line type="monotone" dataKey="beans" stroke="#82b59d" strokeWidth={2.5} dot={false} />
+                {selectedCommodityDetails.map((commodity, index) => (
+                  <Line
+                    key={commodity.slug}
+                    type="monotone"
+                    dataKey={commodity.slug}
+                    name={commodity.name}
+                    stroke={commodityColors[commodity.slug as keyof typeof commodityColors] ?? "#0f3a2f"}
+                    strokeWidth={index === 0 ? 3 : 2.5}
+                    dot={false}
+                  />
+                ))}
               </LineChart>
             </ResponsiveContainer>
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-2 text-sm text-bapi-evergreen/65">
+            {selectedCommodityDetails.map((commodity) => (
+              <span
+                key={commodity.slug}
+                className="inline-flex items-center gap-2 rounded-full bg-white/60 px-3 py-1.5"
+              >
+                <span
+                  className="h-2.5 w-2.5 rounded-full"
+                  style={{
+                    backgroundColor:
+                      commodityColors[commodity.slug as keyof typeof commodityColors] ?? "#0f3a2f",
+                  }}
+                />
+                {commodity.name}
+              </span>
+            ))}
           </div>
         </SectionCard>
 

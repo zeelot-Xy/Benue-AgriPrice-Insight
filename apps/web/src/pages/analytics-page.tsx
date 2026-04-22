@@ -1,4 +1,4 @@
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { QueryState } from "../components/ui/query-state";
 import { SectionCard } from "../components/ui/section-card";
@@ -103,6 +103,24 @@ export function AnalyticsPage() {
           </div>
         </SectionCard>
       </div>
+
+      <SectionCard
+        eyebrow="All Commodities"
+        title="Full snapshot across the eight tracked commodities"
+        description="This view gives a broader comparison across all commodities using the latest available average price."
+      >
+        <div className="h-[360px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={data.allCommoditySnapshot}>
+              <CartesianGrid stroke="rgba(15,58,47,0.08)" vertical={false} />
+              <XAxis dataKey="commodity" stroke="rgba(15,58,47,0.55)" angle={-18} textAnchor="end" height={70} />
+              <YAxis stroke="rgba(15,58,47,0.55)" />
+              <Tooltip />
+              <Bar dataKey="averagePrice" fill="#0f3a2f" radius={[8, 8, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </SectionCard>
     </div>
   );
 }
