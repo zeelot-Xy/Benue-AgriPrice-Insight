@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 
 import {
   listPendingSubmissionsQuerySchema,
+  publicPriceManualSubmissionSchema,
   publicPriceUploadSchema,
   rejectSubmissionSchema,
   submissionIdParamSchema,
@@ -12,6 +13,12 @@ export const submissionsController = {
   async submitPublicUpload(req: Request, res: Response) {
     const payload = publicPriceUploadSchema.parse(req.body);
     const result = await submissionsService.submitPublicUpload(payload);
+    res.status(201).json(result);
+  },
+
+  async submitManualEntry(req: Request, res: Response) {
+    const payload = publicPriceManualSubmissionSchema.parse(req.body);
+    const result = await submissionsService.submitManualEntry(payload);
     res.status(201).json(result);
   },
 

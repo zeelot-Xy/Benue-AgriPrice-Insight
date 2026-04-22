@@ -10,6 +10,10 @@ submissionsRouter.post(
   "/public-upload",
   asyncHandler(submissionsController.submitPublicUpload),
 );
+submissionsRouter.post(
+  "/public-entry",
+  asyncHandler(submissionsController.submitManualEntry),
+);
 submissionsRouter.get(
   "/pending",
   requireAuth,
