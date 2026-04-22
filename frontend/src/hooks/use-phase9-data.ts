@@ -83,7 +83,16 @@ export function useLogout() {
 
   return () => {
     clearStoredToken();
-    void queryClient.invalidateQueries();
+    queryClient.setQueryData(["current-user"], null);
+    queryClient.removeQueries({ queryKey: ["current-user"] });
+    queryClient.removeQueries({ queryKey: ["admin-data"] });
+    queryClient.removeQueries({ queryKey: ["pending-submissions"] });
+    void queryClient.invalidateQueries({
+      predicate: (query) =>
+        ["dashboard-data", "market-data", "analytics-data", "upload-page-data"].includes(
+          String(query.queryKey[0]),
+        ),
+    });
   };
 }
 

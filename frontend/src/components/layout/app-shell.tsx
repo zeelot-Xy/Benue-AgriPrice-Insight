@@ -10,7 +10,7 @@ import {
   Menu,
   Upload,
 } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import { useCurrentUser, useLogout } from "../../hooks/use-phase9-data";
 import { BapiLogo } from "../brand/bapi-logo";
@@ -24,6 +24,7 @@ const navigation = [
 ];
 
 export function AppShell({ children }: PropsWithChildren) {
+  const navigate = useNavigate();
   const { data: currentUser } = useCurrentUser();
   const logout = useLogout();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -33,6 +34,12 @@ export function AppShell({ children }: PropsWithChildren) {
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    closeMobileMenu();
+    void navigate("/", { replace: true });
   };
 
   return (
@@ -160,7 +167,7 @@ export function AppShell({ children }: PropsWithChildren) {
               {currentUser ? (
                 <button
                   type="button"
-                  onClick={logout}
+                  onClick={handleLogout}
                   className="rounded-full bg-bapi-evergreen px-3 py-2 text-xs font-semibold text-white"
                 >
                   Sign out

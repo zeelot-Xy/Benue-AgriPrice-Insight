@@ -8,8 +8,8 @@ import { useLogin } from "../hooks/use-phase9-data";
 export function LoginPage() {
   const navigate = useNavigate();
   const login = useLogin();
-  const [email, setEmail] = useState("admin@bapi.local");
-  const [password, setPassword] = useState("BapiAdmin123!");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -52,6 +52,8 @@ export function LoginPage() {
                   <input
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
+                    type="email"
+                    autoComplete="username"
                     className="w-full bg-transparent outline-none placeholder:text-bapi-evergreen/35"
                     placeholder="admin@bapi.local"
                   />
@@ -65,6 +67,7 @@ export function LoginPage() {
                     type={isPasswordVisible ? "text" : "password"}
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
+                    autoComplete="current-password"
                     className="w-full bg-transparent outline-none placeholder:text-bapi-evergreen/35"
                     placeholder="Enter your account password"
                   />

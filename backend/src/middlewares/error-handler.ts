@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import type { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
 
@@ -24,6 +25,13 @@ export function errorHandler(
     return res.status(error.statusCode).json({
       message: error.message,
       details: error.details ?? null,
+    });
+  }
+
+  if (error instanceof Prisma.PrismaClientInitializationError) {
+    return res.status(503).json({
+      message:
+        "The database service is unavailable. Start PostgreSQL and try again.",
     });
   }
 
