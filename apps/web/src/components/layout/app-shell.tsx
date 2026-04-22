@@ -91,8 +91,8 @@ export function AppShell({ children }: PropsWithChildren) {
               Benue markets, weekly prices, explainable insight.
             </h2>
             <p className="mt-3 text-sm leading-6 text-white/78">
-              Built for Makurdi, Gboko, Zaki Biam, and Otukpo across eight
-              approved commodities only.
+              Focused on Makurdi, Gboko, Zaki Biam, and Otukpo, with weekly
+              tracking for eight key commodities.
             </p>
           </div>
 
@@ -130,7 +130,7 @@ export function AppShell({ children }: PropsWithChildren) {
               <div>
                 <p className="text-sm font-semibold">Explainability First</p>
                 <p className="text-sm text-bapi-evergreen/68">
-                  Rule-based alerts remain the primary decision support layer.
+                  Alerts explain what changed in plain language before any forecast is considered.
                 </p>
               </div>
             </div>

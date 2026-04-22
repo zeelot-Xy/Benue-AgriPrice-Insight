@@ -118,29 +118,29 @@ export const seasonalityInsights = [
 ];
 
 export const adminTasks = [
-  "Enter weekly price records for approved commodities only",
-  "Upload CSV files that match the controlled import template",
-  "Review failed import rows before resubmission",
-  "Monitor alert explanations before communicating changes to users",
+  "Add weekly price records only for approved markets and commodities",
+  "Upload CSV files that follow the approved BAPI format",
+  "Check rows that failed validation before uploading again",
+  "Review alert summaries before sharing updates with users",
 ];
 
 export const quickActions = [
   {
     title: "Upload Weekly CSV",
-    caption: "Manual import only, no scraping or live feeds.",
+    caption: "Add weekly market prices using the approved upload format.",
   },
   {
     title: "Review Trend Alerts",
-    caption: "Explainable thresholds first, forecast support second.",
+    caption: "See which prices are rising, falling, or changing unusually.",
   },
   {
     title: "Compare Markets",
-    caption: "Makurdi, Gboko, Zaki Biam, and Otukpo only.",
+    caption: "Compare prices across Makurdi, Gboko, Zaki Biam, and Otukpo.",
   },
 ];
 
 export const phase9Notes = {
-  uiStatus: "The interface is ready for monitoring, review, and presentation.",
+  uiStatus: "The main monitoring tools are available on this screen.",
   integrationStatus:
-    "Prepared data remains available whenever live services are temporarily unavailable.",
+    "Saved data is shown whenever live updates are not available.",
 };

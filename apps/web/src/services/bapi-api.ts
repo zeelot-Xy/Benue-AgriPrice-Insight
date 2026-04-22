@@ -511,7 +511,7 @@ export async function getUploadPageData() {
     return {
       source: "live" as IntegrationSource,
       note:
-        "Public uploads enter a review queue first. They do not change dashboard statistics until an administrator approves them.",
+        "Public submissions are reviewed first and only affect prices after approval.",
       importTemplate: {
         acceptedFileTypes: ".csv",
         requiredColumns: [
@@ -541,7 +541,7 @@ export async function getUploadPageData() {
   } catch {
     return {
       ...buildFallbackNote(
-        "Reference services are temporarily unavailable, but uploads can still be prepared using the approved BAPI CSV format.",
+        "Live reference services are not available right now, but you can still prepare a submission using the approved BAPI format.",
       ),
       importTemplate: {
         acceptedFileTypes: ".csv",
@@ -593,7 +593,7 @@ export async function getDashboardData() {
 
     return {
       source: "live" as IntegrationSource,
-      note: "Dashboard data is being refreshed from the BAPI monitoring services.",
+      note: "This dashboard is currently using live system data.",
       summary: {
         totalMarkets: overview.counts.markets,
         totalCommodities: overview.counts.commodities,
@@ -608,13 +608,13 @@ export async function getDashboardData() {
       phase9Notes: {
         uiStatus: "Current market indicators are available across the dashboard.",
         integrationStatus:
-          "Reports, alerts, and weekly price records are synchronized into this view.",
+          "Reports, alerts, and weekly price records are all shown together here.",
       },
     };
   } catch {
     return {
       ...buildFallbackNote(
-        "Live services are temporarily unavailable, so the dashboard is showing the most recent prepared snapshot.",
+        "Live updates are not available right now, so this dashboard is showing saved data.",
       ),
       summary: dashboardSummary,
       weeklyPriceSeries: fallbackWeeklyPriceSeries,
@@ -636,7 +636,7 @@ export async function getMarketData() {
 
     return {
       source: "live" as IntegrationSource,
-      note: "Market summaries and seasonal notes are being drawn from current BAPI records.",
+      note: "Market summaries and seasonal notes are using current system records.",
       marketCards: markets.map((market) => ({
         name: market.name,
         code: market.code,
@@ -652,7 +652,7 @@ export async function getMarketData() {
   } catch {
     return {
       ...buildFallbackNote(
-        "Market services are temporarily unavailable, so comparison cards are showing a prepared reference snapshot.",
+        "Live market updates are not available right now, so this page is showing saved data.",
       ),
       marketCards: fallbackMarketCards,
       comparison: fallbackMarketComparison,
@@ -672,7 +672,7 @@ export async function getAnalyticsData() {
 
     return {
       source: "live" as IntegrationSource,
-      note: "Analytics panels are using current trend, alert, and seasonality calculations.",
+      note: "These analytics are based on the latest available calculations.",
       alerts: mapAlerts(alerts.items),
       seasonalityInsights: buildSeasonalityCards(seasonality),
       weeklyPriceSeries: combineWeeklySeries({
@@ -682,7 +682,7 @@ export async function getAnalyticsData() {
   } catch {
     return {
       ...buildFallbackNote(
-        "Analytics services are temporarily unavailable, so this page is showing a prepared reference snapshot.",
+        "Live analytics are not available right now, so this page is showing saved data.",
       ),
       alerts: fallbackAlerts,
       seasonalityInsights: fallbackSeasonalityInsights,
@@ -749,7 +749,7 @@ export async function getForecastData() {
 
     return {
       source: "live" as IntegrationSource,
-      note: "Forecast results are being generated from the active forecasting workflow and stored run history.",
+      note: "These forecast results are coming from the active forecasting service.",
       summary: {
         totalMarkets: overview.counts.markets,
         totalCommodities: overview.counts.commodities,
@@ -773,7 +773,7 @@ export async function getForecastData() {
   } catch {
     return {
       ...buildFallbackNote(
-        "Forecast services are temporarily unavailable, so this page is showing a prepared projection snapshot.",
+        "Live forecast updates are not available right now, so this page is showing saved forecast data.",
       ),
       summary: dashboardSummary,
       alerts: fallbackAlerts,
@@ -783,7 +783,7 @@ export async function getForecastData() {
         market: "Makurdi",
         commodity: "Yam",
         explanation:
-          "A saved projection view is being shown while live forecast generation is unavailable.",
+          "A saved forecast view is being shown while live forecast updates are unavailable.",
         confidenceLabel: "Moderate",
         historyCount: 0,
       },
@@ -802,7 +802,7 @@ export async function getAdminData() {
 
     return {
       source: "live" as IntegrationSource,
-      note: "Administrative counts and scope information are being read from the current system records.",
+      note: "This admin workspace is using current system records.",
       adminTasks,
       quickActions,
       summary: {
@@ -840,7 +840,7 @@ export async function getAdminData() {
   } catch {
     return {
       ...buildFallbackNote(
-        "Administrative services are temporarily unavailable, so this workspace is showing a prepared summary snapshot.",
+        "Live admin updates are not available right now, so this workspace is showing saved data.",
       ),
       adminTasks,
       quickActions,
