@@ -145,7 +145,7 @@ export function UploadPricesPage() {
     return (
       <QueryState
         title="Loading Upload Workspace"
-        description="Preparing the public contribution flow and approved BAPI upload scope."
+        description="Loading the public submission form and approved upload options."
       />
     );
   }
@@ -154,7 +154,7 @@ export function UploadPricesPage() {
     return (
       <QueryState
         title="Upload Workspace Unavailable"
-        description="The contribution workflow could not be prepared for this screen."
+        description="The upload page is not available right now."
       />
     );
   }
@@ -164,10 +164,10 @@ export function UploadPricesPage() {
       <SectionCard
         eyebrow="Community Contribution"
         title="Submit weekly price updates for admin review"
-        description="Contributors can upload a prepared CSV or fill rows directly in the browser. Every submission enters the review queue before it can affect live analytics."
+        description="You can upload a CSV file or fill the form directly here. Every submission is reviewed before it affects the platform."
         action={
           <StatusPill tone={data.source === "live" ? "jade" : "mint"}>
-            {data.source === "live" ? "Review Queue Active" : "Offline Guidance"}
+            {data.source === "live" ? "Review Queue Open" : "Reference Mode"}
           </StatusPill>
         }
       >
@@ -260,7 +260,7 @@ export function UploadPricesPage() {
 
                 <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
                   <p className="text-sm text-bapi-evergreen/62">
-                    One row should represent one commodity in one market for one week.
+                    Each row should contain one commodity price for one market and one week.
                   </p>
                   <button
                     type="submit"
@@ -516,15 +516,15 @@ export function UploadPricesPage() {
                 <div>
                   <h3 className="font-semibold text-bapi-evergreen">How review works</h3>
                   <p className="text-sm text-bapi-evergreen/68">
-                    Submit first, verify later, publish only after approval.
+                    Submissions are checked before they appear in the main dataset.
                   </p>
                 </div>
               </div>
               <div className="mt-4 grid gap-3">
                 {[
                   "Submitted rows enter a pending review queue instead of the live dataset.",
-                  "Administrators compare the submission against approved markets, commodities, and date formats.",
-                  "Only approved rows are merged into weekly statistics, alerts, comparisons, and forecasts.",
+                  "Administrators check the submission against approved markets, commodities, and date formats.",
+                  "Only approved rows are added to prices, alerts, comparisons, and forecasts.",
                 ].map((item, index) => (
                   <div
                     key={item}

@@ -37,7 +37,7 @@ export function AdminPage() {
     return (
       <QueryState
         title="Admin Access Required"
-        description="This workspace is reserved for administrators who review community submissions, run direct imports, and approve the records that shape BAPI analytics."
+        description="This page is for administrators who review submissions, manage imports, and approve records before they affect the platform."
       />
     );
   }
@@ -66,7 +66,7 @@ export function AdminPage() {
     return (
       <QueryState
         title="Loading Admin Workspace"
-        description="Fetching live overview counts and scope metadata from the backend."
+        description="Loading admin summary information, review items, and import settings."
       />
     );
   }
@@ -75,7 +75,7 @@ export function AdminPage() {
     return (
       <QueryState
         title="Admin Workspace Unavailable"
-        description="No admin summary could be prepared for this screen."
+        description="Admin information is not available right now."
       />
     );
   }
@@ -85,10 +85,10 @@ export function AdminPage() {
       <SectionCard
         eyebrow="Admin Workspace"
         title="Controlled data management for weekly market updates"
-        description="The admin workspace supports careful data stewardship through manual entry, CSV import, and controlled update workflows."
+        description="Use this workspace to manage weekly market records, review public submissions, and keep the dataset accurate."
         action={
           <StatusPill tone={data.source === "live" ? "jade" : "mint"}>
-            {data.source === "live" ? "Live Summary" : "Offline Summary"}
+            {data.source === "live" ? "Live Data" : "Saved Data"}
           </StatusPill>
         }
       >
@@ -107,7 +107,7 @@ export function AdminPage() {
                     Weekly CSV Import
                   </h3>
                   <p className="text-sm text-bapi-evergreen/68">
-                    Submit validated weekly market records using the approved BAPI import format.
+                    Upload weekly market records with the approved BAPI CSV format.
                   </p>
                 </div>
               </div>
@@ -171,7 +171,7 @@ export function AdminPage() {
 
               <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
                 <div className="text-sm text-bapi-evergreen/62">
-                  Direct admin imports update the live monitored dataset immediately.
+                  Approved admin imports update the main dataset immediately.
                 </div>
                 <button
                   type="submit"
@@ -240,7 +240,7 @@ export function AdminPage() {
                   <p className="text-sm text-bapi-evergreen/68">
                     {currentUser
                       ? `${currentUser.fullName} is authenticated as ${currentUser.role}.`
-                      : "Sign in with an admin account to unlock imports and data management actions."}
+                      : "Sign in with an admin account to use imports and review tools."}
                   </p>
                 </div>
               </div>
@@ -281,7 +281,7 @@ export function AdminPage() {
                     Pending public uploads
                   </p>
                   <p className="mt-2 text-sm text-bapi-evergreen/68">
-                    Review community submissions before they become part of the live dataset.
+                    Review public submissions before they are added to the main dataset.
                   </p>
                 </div>
                 <StatusPill tone="amber">
@@ -368,7 +368,7 @@ export function AdminPage() {
                   ))
                 ) : (
                   <p className="text-sm leading-6 text-bapi-evergreen/62">
-                    No public uploads are waiting for review right now.
+                    There are no public uploads waiting for review right now.
                   </p>
                 )}
               </div>
@@ -381,7 +381,7 @@ export function AdminPage() {
                     Recent weekly records
                   </p>
                   <p className="mt-2 text-sm text-bapi-evergreen/68">
-                    Review the most recent entries before publishing insights.
+                    Check the latest entries before sharing insights from the system.
                   </p>
                 </div>
                 <StatusPill tone="mint">
@@ -413,7 +413,7 @@ export function AdminPage() {
                   ))
                 ) : (
                   <p className="text-sm leading-6 text-bapi-evergreen/62">
-                    Recent price activity will appear here as weekly records are entered or imported.
+                    Recent price records will appear here after weekly entries are added.
                   </p>
                 )}
               </div>
@@ -422,7 +422,7 @@ export function AdminPage() {
             <div className="mt-5 flex items-center gap-3 rounded-[1.4rem] bg-[linear-gradient(140deg,rgba(15,58,47,0.92),rgba(15,58,47,0.78))] p-4 text-white">
               <WandSparkles className="h-5 w-5 text-bapi-mint" />
               <p className="text-sm leading-6 text-white/82">
-                Reliable analysis begins with clean records, complete coverage, and clear explanations.
+                Good analysis starts with accurate records, consistent coverage, and clear explanations.
               </p>
             </div>
           </div>

@@ -30,7 +30,7 @@ export function LoginPage() {
               Agricultural market intelligence shaped for Benue State.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-8 text-bapi-evergreen/70">
-              BAPI combines weekly price monitoring, explainable trend analysis, market comparison, and optional forecasting in a calm, premium interface built for farmers, traders, and policymakers.
+              BAPI brings together weekly price tracking, trend alerts, market comparison, and forecast support in one clear platform for farmers, traders, and decision-makers.
             </p>
             <div className="mt-8 grid gap-3 md:grid-cols-3">
               {["Review queued uploads", "Direct CSV import", "Forecast-ready analytics"].map((item) => (
@@ -93,7 +93,7 @@ export function LoginPage() {
             </form>
 
             <p className="mt-5 text-sm leading-6 text-bapi-evergreen/62">
-              Sign in to review contributed uploads, manage direct imports, and control the approved dataset behind BAPI.
+              Sign in to review submitted updates, manage direct imports, and control the approved data used across BAPI.
             </p>
             {login.error ? (
               <p className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-700">
