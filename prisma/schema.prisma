@@ -76,7 +76,6 @@ model Market {
   submissionRows    PriceSubmissionRow[]
   analysisSnapshots AnalysisSnapshot[]
   alerts            Alert[]
-  forecastRuns      ForecastRun[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
 }
@@ -91,7 +90,6 @@ model Commodity {
   submissionRows    PriceSubmissionRow[]
   analysisSnapshots AnalysisSnapshot[]
   alerts            Alert[]
-  forecastRuns      ForecastRun[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
 }
@@ -160,22 +158,6 @@ model Alert {
   createdAt   DateTime      @default(now())
 
   @@index([marketId, commodityId, alertType, isActive])
-}
-
-model ForecastRun {
-  id            Int       @id @default(autoincrement())
-  marketId      Int
-  commodityId   Int
-  modelName     String
-  horizonWeeks  Int
-  inputSummary  Json
-  outputSummary Json
-  explanation   String
-  market        Market    @relation(fields: [marketId], references: [id])
-  commodity     Commodity @relation(fields: [commodityId], references: [id])
-  createdAt     DateTime  @default(now())
-
-  @@index([marketId, commodityId, createdAt])
 }
 
 model PriceSubmissionBatch {
