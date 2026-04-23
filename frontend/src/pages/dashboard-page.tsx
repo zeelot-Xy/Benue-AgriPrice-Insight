@@ -23,9 +23,11 @@ import { QueryState } from "../components/ui/query-state";
 import { SectionCard } from "../components/ui/section-card";
 import { StatusPill } from "../components/ui/status-pill";
 import { useDashboardData } from "../hooks/use-phase9-data";
+import { formatWeekEnding } from "../lib/formatters";
 
 export function DashboardPage() {
   const { data, isLoading } = useDashboardData();
+  const [selectedMarket, setSelectedMarket] = useState("ALL");
   const [selectedCommodities, setSelectedCommodities] = useState<string[]>([
     "yam",
     "rice",
@@ -81,6 +83,7 @@ export function DashboardPage() {
       <QueryState
         title="Loading Dashboard"
         description="Loading the latest market summary, alerts, and weekly price records."
+        guidance="You can still return to the other public pages while live dashboard data loads."
       />
     );
   }
@@ -89,7 +92,9 @@ export function DashboardPage() {
     return (
       <QueryState
         title="Dashboard Unavailable"
-        description="Dashboard information is not available right now."
+        description="Market data is temporarily unavailable."
+        guidance="You can still browse the public pages or try again in a moment."
+        tone="warning"
       />
     );
   }
@@ -135,7 +140,7 @@ export function DashboardPage() {
         />
         <MetricCard
           label="Latest Week Ending"
-          value={data.summary.latestWeekEnding}
+          value={data.summary.latestWeekEnding === "N/A" ? "N/A" : formatWeekEnding(data.summary.latestWeekEnding)}
           detail="Prices are updated as weekly records, not live feeds."
           icon={<Activity className="h-5 w-5" />}
         />
@@ -213,6 +218,9 @@ export function DashboardPage() {
               </span>
             ))}
           </div>
+          <p className="mt-4 rounded-[1.2rem] bg-bapi-mint/16 px-4 py-3 text-sm leading-6 text-bapi-evergreen/72">
+            This chart shows how weekly average prices move over time. It helps you see whether selected commodities are rising, falling, or holding steady.
+          </p>
         </SectionCard>
 
         <SectionCard
@@ -269,16 +277,38 @@ export function DashboardPage() {
               </article>
             ))}
           </div>
+          <p className="mt-4 rounded-[1.2rem] bg-white/60 px-4 py-3 text-sm leading-6 text-bapi-evergreen/68">
+            Alerts turn raw price changes into plain-language warnings so users can quickly see where attention is needed most.
+          </p>
         </SectionCard>
 
         <SectionCard
           eyebrow="Market Comparison"
-          title="Cross-market reading for soybean, millet, and sorghum"
-          description="Compare selected commodities across the four markets to spot where prices are stronger or weaker."
+          title="Cross-market reading for selected commodity prices"
+          description="Compare commodity prices across markets to spot where prices are stronger or weaker."
         >
+          <div className="mb-4 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setSelectedMarket("ALL")}
+              className={["rounded-full px-4 py-2 text-sm font-semibold", selectedMarket === "ALL" ? "bg-bapi-evergreen text-white" : "bg-white/60 text-bapi-evergreen/72"].join(" ")}
+            >
+              All markets
+            </button>
+            {data.marketOptions.map((market) => (
+              <button
+                key={market.code}
+                type="button"
+                onClick={() => setSelectedMarket(market.name)}
+                className={["rounded-full px-4 py-2 text-sm font-semibold", selectedMarket === market.name ? "bg-bapi-evergreen text-white" : "bg-white/60 text-bapi-evergreen/72"].join(" ")}
+              >
+                {market.name}
+              </button>
+            ))}
+          </div>
           <div className="h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data.marketComparison}>
+              <BarChart data={selectedMarket === "ALL" ? data.marketComparison : data.marketComparison.filter((item) => item.market === selectedMarket)}>
                 <CartesianGrid stroke="rgba(15,58,47,0.08)" vertical={false} />
                 <XAxis dataKey="market" stroke="rgba(15,58,47,0.55)" />
                 <YAxis stroke="rgba(15,58,47,0.55)" />
@@ -289,6 +319,9 @@ export function DashboardPage() {
               </BarChart>
             </ResponsiveContainer>
           </div>
+          <p className="mt-4 rounded-[1.2rem] bg-bapi-mint/16 px-4 py-3 text-sm leading-6 text-bapi-evergreen/72">
+            This chart compares official market prices across locations. Use the market filter to reduce scanning when you want to focus on one market first.
+          </p>
         </SectionCard>
       </div>
     </div>

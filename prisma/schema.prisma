@@ -162,6 +162,7 @@ model Alert {
 
 model PriceSubmissionBatch {
   id             Int                  @id @default(autoincrement())
+  publicReferenceCode String          @unique
   fileName       String
   submitterName  String?
   submitterEmail String?

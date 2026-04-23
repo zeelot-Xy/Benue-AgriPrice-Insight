@@ -11,6 +11,7 @@ import {
   getUploadPageData,
   importPricesCsv,
   getMarketData,
+  lookupSubmissionStatus,
   rejectSubmissionBatch,
   submitPublicPriceManualEntry,
   submitPublicPriceUpload,
@@ -53,6 +54,15 @@ export function useUploadPageData() {
   return useQuery({
     queryKey: ["upload-page-data"],
     queryFn: getUploadPageData,
+  });
+}
+
+export function useSubmissionStatusLookup(referenceCode: string) {
+  return useQuery({
+    queryKey: ["submission-status", referenceCode],
+    queryFn: () => lookupSubmissionStatus(referenceCode),
+    enabled: Boolean(referenceCode.trim()),
+    retry: false,
   });
 }
 

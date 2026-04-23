@@ -4,15 +4,18 @@ import { QueryState } from "../components/ui/query-state";
 import { SectionCard } from "../components/ui/section-card";
 import { StatusPill } from "../components/ui/status-pill";
 import { useMarketData } from "../hooks/use-phase9-data";
+import { useState } from "react";
 
 export function MarketsPage() {
   const { data, isLoading } = useMarketData();
+  const [selectedCommodity, setSelectedCommodity] = useState("soybean");
 
   if (isLoading) {
     return (
       <QueryState
         title="Loading Markets"
         description="Loading market profiles, comparisons, and seasonal notes."
+        guidance="You can still browse the dashboard while market summaries load."
       />
     );
   }
@@ -21,7 +24,9 @@ export function MarketsPage() {
     return (
       <QueryState
         title="Markets Unavailable"
-        description="Market information is not available right now."
+        description="Market information is temporarily unavailable."
+        guidance="You can still browse the public pages or try again in a moment."
+        tone="warning"
       />
     );
   }
@@ -61,6 +66,18 @@ export function MarketsPage() {
           title="Current cross-market commodity view"
           description="This chart lets you compare selected commodity prices across the four markets at a glance."
         >
+          <div className="mb-4 flex flex-wrap gap-2">
+            {data.comparisonCommodityOptions.map((commodity) => (
+              <button
+                key={commodity.slug}
+                type="button"
+                onClick={() => setSelectedCommodity(commodity.slug)}
+                className={["rounded-full px-4 py-2 text-sm font-semibold", selectedCommodity === commodity.slug ? "bg-bapi-evergreen text-white" : "bg-white/60 text-bapi-evergreen/72"].join(" ")}
+              >
+                {commodity.name}
+              </button>
+            ))}
+          </div>
           <div className="h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data.comparison}>
@@ -68,12 +85,13 @@ export function MarketsPage() {
                 <XAxis dataKey="market" stroke="rgba(15,58,47,0.55)" />
                 <YAxis stroke="rgba(15,58,47,0.55)" />
                 <Tooltip />
-                <Bar dataKey="soybean" fill="#0f3a2f" radius={[8, 8, 0, 0]} />
-                <Bar dataKey="millet" fill="#34c9a2" radius={[8, 8, 0, 0]} />
-                <Bar dataKey="sorghum" fill="#a1e8c8" radius={[8, 8, 0, 0]} />
+                <Bar dataKey={selectedCommodity} fill="#0f3a2f" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
+          <p className="mt-4 rounded-[1.2rem] bg-bapi-mint/16 px-4 py-3 text-sm leading-6 text-bapi-evergreen/72">
+            This chart shows how one selected commodity compares across markets so users do not have to scan multiple overlapping bars at once.
+          </p>
         </SectionCard>
 
         <SectionCard
@@ -95,6 +113,9 @@ export function MarketsPage() {
               </article>
             ))}
           </div>
+          <p className="mt-4 rounded-[1.2rem] bg-white/60 px-4 py-3 text-sm leading-6 text-bapi-evergreen/68">
+            Official statistics are based on approved submissions and validated admin records.
+          </p>
         </SectionCard>
       </div>
     </div>

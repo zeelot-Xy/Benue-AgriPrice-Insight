@@ -4,6 +4,10 @@ export const submissionIdParamSchema = z.object({
   id: z.coerce.number().int().positive(),
 });
 
+export const submissionReferenceCodeParamSchema = z.object({
+  referenceCode: z.string().trim().min(4).max(40),
+});
+
 export const listPendingSubmissionsQuerySchema = z.object({
   limit: z.coerce.number().int().positive().max(20).optional().default(10),
 });

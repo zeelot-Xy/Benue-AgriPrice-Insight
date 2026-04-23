@@ -3,6 +3,7 @@ import { ArrowRight, Eye, EyeOff, LockKeyhole, UserRound } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { BapiLogo } from "../components/brand/bapi-logo";
+import { FeedbackBanner } from "../components/ui/feedback-banner";
 import { useLogin } from "../hooks/use-phase9-data";
 
 export function LoginPage() {
@@ -44,6 +45,9 @@ export function LoginPage() {
           <section className="glass-panel rounded-[2.2rem] p-6 md:p-8">
             <p className="text-xs uppercase tracking-[0.28em] text-bapi-jade">Sign In</p>
             <h2 className="mt-4 font-display text-3xl">Administrator sign in</h2>
+            <p className="mt-3 text-sm leading-6 text-bapi-evergreen/68">
+              Only administrators can sign in here. Public market information remains available without an account.
+            </p>
             <form className="mt-8 grid gap-4" onSubmit={handleSubmit}>
               <label className="grid gap-2 text-sm">
                 <span>Email</span>
@@ -90,7 +94,7 @@ export function LoginPage() {
                 className="mt-2 inline-flex items-center justify-center gap-2 rounded-[1.4rem] bg-bapi-evergreen px-5 py-4 text-sm font-semibold text-white shadow-soft transition hover:bg-bapi-evergreen/92"
                 disabled={login.isPending}
               >
-                {login.isPending ? "Signing in..." : "Continue to admin workspace"}
+                {login.isPending ? "Checking administrator access..." : "Continue to admin workspace"}
                 <ArrowRight className="h-4 w-4" />
               </button>
             </form>
@@ -99,9 +103,14 @@ export function LoginPage() {
               Sign in to review submitted updates, manage direct imports, and control the approved data used across BAPI.
             </p>
             {login.error ? (
-              <p className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-700">
-                {login.error.message}
-              </p>
+              <div className="mt-3">
+                <FeedbackBanner
+                  tone="warning"
+                  title="Sign-in problem"
+                  description={login.error.message}
+                  detail="If your details are correct, the service may be temporarily unavailable. You can try again shortly or return to the public dashboard."
+                />
+              </div>
             ) : null}
 
             <Link to="/" className="mt-8 inline-flex text-sm font-semibold text-bapi-jade underline-offset-4 hover:underline">

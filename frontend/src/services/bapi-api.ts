@@ -148,10 +148,18 @@ type SubmissionBatchRow = {
   sourceNote: string | null;
   market?: { id: number; code: string; name: string };
   commodity?: { id: number; slug: string; name: string };
+  currentOfficialValue?: {
+    id: number;
+    priceDate: string;
+    price: number;
+    unit: string;
+    sourceNote: string | null;
+  } | null;
 };
 
 type SubmissionBatch = {
   id: number;
+  publicReferenceCode: string;
   fileName: string;
   submitterName: string | null;
   submitterEmail: string | null;
@@ -166,6 +174,13 @@ type SubmissionBatch = {
   updatedAt: string;
   reviewedBy: { id: number; fullName: string; email: string } | null;
   rows: SubmissionBatchRow[];
+  affectedMarkets: Array<{ id: number; code: string; name: string }>;
+  affectedCommodities: Array<{ id: number; slug: string; name: string }>;
+  previewRows: SubmissionBatchRow[];
+  impactSummary: {
+    created: number;
+    updated: number;
+  };
 };
 
 type PublicPriceUploadResponse = {
@@ -196,6 +211,20 @@ type ApproveSubmissionResponse = {
 type RejectSubmissionResponse = {
   batch: SubmissionBatch;
   message: string;
+};
+
+type SubmissionStatusLookupResponse = {
+  referenceCode: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  statusLabel: string;
+  statusDescription: string;
+  fileName: string;
+  submittedAt: string;
+  reviewedAt: string | null;
+  totalRows: number;
+  acceptedRows: number;
+  excludedRows: number;
+  reviewNote: string | null;
 };
 
 type IntegrationSource = "live" | "fallback";
@@ -242,6 +271,14 @@ function formatWeekLabel(value: string) {
     day: "2-digit",
     timeZone: "UTC",
   });
+}
+
+function normalizeReferenceCode(value: string) {
+  return value.trim().toUpperCase();
+}
+
+function slugifyLabel(value: string) {
+  return value.toLowerCase().replaceAll(" ", "-");
 }
 
 function buildFallbackNote(message: string) {
@@ -298,7 +335,9 @@ function combineWeeklySeries(
 function mapAlerts(source: AlertsResponse["items"]) {
   return source.slice(0, 3).map((item) => ({
     commodity: item.commodity.name,
+    commoditySlug: item.commodity.slug,
     market: item.market.name,
+    marketCode: item.market.code,
     severity:
       item.severity.charAt(0) + item.severity.slice(1).toLowerCase(),
     delta: `${item.values.changePercent > 0 ? "+" : ""}${item.values.changePercent.toFixed(1)}%`,
@@ -307,11 +346,9 @@ function mapAlerts(source: AlertsResponse["items"]) {
 }
 
 function buildMarketComparison(latestPrices: LatestPricesResponse) {
-  const slugs = ["soybean", "millet", "sorghum"];
-  const items = latestPrices.filter((item) => slugs.includes(item.commodity.slug));
   const byMarket = new Map<string, Record<string, string | number>>();
 
-  for (const commodity of items) {
+  for (const commodity of latestPrices) {
     for (const entry of commodity.entries) {
       const current = byMarket.get(entry.market.code) ?? {
         market: entry.market.name,
@@ -345,13 +382,20 @@ function buildSeasonalityCards(response: SeasonalityResponse) {
 
   const grouped = new Map<
     string,
-    { commodity: string; month: string; averagePrice: number[]; notes: string[] }
+    {
+      commodity: string;
+      commoditySlug: string;
+      month: string;
+      averagePrice: number[];
+      notes: string[];
+    }
   >();
 
   for (const item of response.items) {
     const key = `${item.commodity.slug}:${item.monthLabel}`;
     const current = grouped.get(key) ?? {
       commodity: item.commodity.name,
+      commoditySlug: item.commodity.slug,
       month: item.monthLabel,
       averagePrice: [],
       notes: [],
@@ -364,6 +408,7 @@ function buildSeasonalityCards(response: SeasonalityResponse) {
   return [...grouped.values()]
     .map((item) => ({
       commodity: item.commodity,
+      commoditySlug: item.commoditySlug,
       month: item.month,
       averagePrice: Number(
         (
@@ -479,6 +524,12 @@ export async function rejectSubmissionBatch(id: number, reviewNote?: string) {
   });
 }
 
+export async function lookupSubmissionStatus(referenceCode: string) {
+  return fetchJson<SubmissionStatusLookupResponse>(
+    `/submissions/status/${normalizeReferenceCode(referenceCode)}`,
+  );
+}
+
 export async function getUploadPageData() {
   try {
     const [markets, commodities] = await Promise.all([
@@ -489,7 +540,7 @@ export async function getUploadPageData() {
     return {
       source: "live" as IntegrationSource,
       note:
-        "Public submissions are reviewed first and only affect prices after approval.",
+        "Public submissions are reviewed first and only affect official statistics after approval.",
       importTemplate: {
         acceptedFileTypes: ".csv",
         requiredColumns: [
@@ -519,7 +570,7 @@ export async function getUploadPageData() {
   } catch {
     return {
       ...buildFallbackNote(
-        "Live reference services are not available right now, but you can still prepare a submission using the approved BAPI format.",
+        "Live reference data is temporarily unavailable, but you can still prepare a submission using the approved BAPI format.",
       ),
       importTemplate: {
         acceptedFileTypes: ".csv",
@@ -557,17 +608,18 @@ export async function getUploadPageData() {
 
 export async function getDashboardData() {
   try {
-    const [overview, latestPrices, alerts, commodities] = await Promise.all([
+    const [overview, latestPrices, alerts, commodities, markets] = await Promise.all([
       fetchJson<ReportsOverviewResponse>("/reports/overview"),
       fetchJson<LatestPricesResponse>("/reports/latest-prices"),
       fetchJson<AlertsResponse>("/analytics/alerts"),
       fetchJson<Commodity[]>("/commodities"),
+      fetchJson<Market[]>("/markets"),
     ]);
     const priceSeries = await fetchCommoditySeries(commodities, [...dashboardCommodityOrder]);
 
     return {
       source: "live" as IntegrationSource,
-      note: "This dashboard is currently using live system data.",
+      note: "Official statistics are based on approved submissions and validated admin records.",
       commodityOptions: commodities
         .filter((commodity) =>
           dashboardCommodityOrder.includes(
@@ -583,6 +635,11 @@ export async function getDashboardData() {
           slug: commodity.slug,
           name: commodity.name,
         })),
+      marketOptions: markets.map((market) => ({
+        id: market.id,
+        code: market.code,
+        name: market.name,
+      })),
       summary: {
         totalMarkets: overview.counts.markets,
         totalCommodities: overview.counts.commodities,
@@ -598,13 +655,13 @@ export async function getDashboardData() {
       phase9Notes: {
         uiStatus: "Current market indicators are available across the dashboard.",
         integrationStatus:
-          "Reports, alerts, and weekly price records are all shown together here.",
+          "Reports, alerts, and weekly records are shown together in one public view.",
       },
     };
   } catch {
     return {
       ...buildFallbackNote(
-        "Live updates are not available right now, so this dashboard is showing saved data.",
+        "Market data is temporarily unavailable, so this dashboard is showing saved data.",
       ),
       summary: dashboardSummary,
       commodityOptions: [
@@ -617,10 +674,20 @@ export async function getDashboardData() {
         { slug: "millet", name: "Millet" },
         { slug: "sorghum", name: "Sorghum" },
       ],
+      marketOptions: [
+        { id: 1, code: "MKD", name: "Makurdi" },
+        { id: 2, code: "GBK", name: "Gboko" },
+        { id: 3, code: "ZKB", name: "Zaki Biam" },
+        { id: 4, code: "OTP", name: "Otukpo" },
+      ],
       weeklyPriceSeries: fallbackWeeklyPriceSeries,
       allCommoditySnapshot: fallbackAllCommoditySnapshot,
       marketComparison: fallbackMarketComparison,
-      alerts: fallbackAlerts,
+      alerts: fallbackAlerts.map((alert) => ({
+        ...alert,
+        commoditySlug: slugifyLabel(alert.commodity),
+        marketCode: slugifyLabel(alert.market),
+      })),
       quickActions,
       phase9Notes,
     };
@@ -637,7 +704,7 @@ export async function getMarketData() {
 
     return {
       source: "live" as IntegrationSource,
-      note: "Market summaries and seasonal notes are using current system records.",
+      note: "Official statistics are based on approved submissions and validated admin records.",
       marketCards: markets.map((market) => ({
         name: market.name,
         code: market.code,
@@ -648,15 +715,24 @@ export async function getMarketData() {
           "Live market metadata is active for this card.",
       })),
       comparison: buildMarketComparison(latestPrices),
+      comparisonCommodityOptions: latestPrices.map((item) => ({
+        slug: item.commodity.slug,
+        name: item.commodity.name,
+      })),
       seasonalityInsights: buildSeasonalityCards(seasonality),
     };
   } catch {
     return {
       ...buildFallbackNote(
-        "Live market updates are not available right now, so this page is showing saved data.",
+        "Market data is temporarily unavailable, so this page is showing saved data.",
       ),
       marketCards: fallbackMarketCards,
       comparison: fallbackMarketComparison,
+      comparisonCommodityOptions: [
+        { slug: "soybean", name: "Soybean" },
+        { slug: "millet", name: "Millet" },
+        { slug: "sorghum", name: "Sorghum" },
+      ],
       seasonalityInsights: fallbackSeasonalityInsights,
     };
   }
@@ -674,7 +750,7 @@ export async function getAnalyticsData() {
 
     return {
       source: "live" as IntegrationSource,
-      note: "These analytics are based on the latest available calculations.",
+      note: "Official statistics are based on approved submissions and validated admin records.",
       commodityOptions: commodities
         .filter((commodity) =>
           dashboardCommodityOrder.includes(
@@ -698,7 +774,7 @@ export async function getAnalyticsData() {
   } catch {
     return {
       ...buildFallbackNote(
-        "Live analytics are not available right now, so this page is showing saved data.",
+        "Analytics are temporarily unavailable, so this page is showing saved data.",
       ),
       commodityOptions: [
         { slug: "yam", name: "Yam" },
@@ -710,8 +786,15 @@ export async function getAnalyticsData() {
         { slug: "millet", name: "Millet" },
         { slug: "sorghum", name: "Sorghum" },
       ],
-      alerts: fallbackAlerts,
-      seasonalityInsights: fallbackSeasonalityInsights,
+      alerts: fallbackAlerts.map((alert) => ({
+        ...alert,
+        commoditySlug: slugifyLabel(alert.commodity),
+        marketCode: slugifyLabel(alert.market),
+      })),
+      seasonalityInsights: fallbackSeasonalityInsights.map((item) => ({
+        ...item,
+        commoditySlug: slugifyLabel(item.commodity),
+      })),
       allCommoditySnapshot: fallbackAllCommoditySnapshot,
       weeklyPriceSeries: fallbackWeeklyPriceSeries,
     };
@@ -729,7 +812,7 @@ export async function getAdminData() {
 
     return {
       source: "live" as IntegrationSource,
-      note: "This admin workspace is using current system records.",
+      note: "Only approved records feed the public dashboard, comparisons, and analytics.",
       adminTasks,
       quickActions,
       summary: {
@@ -743,6 +826,16 @@ export async function getAdminData() {
         markets: markets.length,
         commodities: commodities.length,
       },
+      marketOptions: markets.map((market) => ({
+        id: market.id,
+        code: market.code,
+        name: market.name,
+      })),
+      commodityOptions: commodities.map((commodity) => ({
+        id: commodity.id,
+        slug: commodity.slug,
+        name: commodity.name,
+      })),
       importTemplate: {
         acceptedFileTypes: ".csv",
         requiredColumns: [
@@ -757,6 +850,8 @@ export async function getAdminData() {
       },
       recentRecords: recentPrices.items.map((item) => ({
         id: item.id,
+        marketCode: item.market?.code ?? "",
+        commoditySlug: item.commodity?.slug ?? "",
         market: item.market?.name ?? `Market ${item.marketId}`,
         commodity: item.commodity?.name ?? `Commodity ${item.commodityId}`,
         priceDate: item.priceDate,
@@ -767,7 +862,7 @@ export async function getAdminData() {
   } catch {
     return {
       ...buildFallbackNote(
-        "Live admin updates are not available right now, so this workspace is showing saved data.",
+        "Admin records are temporarily unavailable, so this workspace is showing saved data.",
       ),
       adminTasks,
       quickActions,
@@ -776,6 +871,22 @@ export async function getAdminData() {
         markets: 4,
         commodities: 8,
       },
+      marketOptions: [
+        { id: 1, code: "MKD", name: "Makurdi" },
+        { id: 2, code: "GBK", name: "Gboko" },
+        { id: 3, code: "ZKB", name: "Zaki Biam" },
+        { id: 4, code: "OTP", name: "Otukpo" },
+      ],
+      commodityOptions: [
+        { id: 1, slug: "yam", name: "Yam" },
+        { id: 2, slug: "cassava", name: "Cassava" },
+        { id: 3, slug: "rice", name: "Rice" },
+        { id: 4, slug: "maize", name: "Maize" },
+        { id: 5, slug: "beans", name: "Beans" },
+        { id: 6, slug: "soybean", name: "Soybean" },
+        { id: 7, slug: "millet", name: "Millet" },
+        { id: 8, slug: "sorghum", name: "Sorghum" },
+      ],
       importTemplate: {
         acceptedFileTypes: ".csv",
         requiredColumns: [

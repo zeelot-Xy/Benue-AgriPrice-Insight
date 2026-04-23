@@ -15,6 +15,10 @@ submissionsRouter.post(
   asyncHandler(submissionsController.submitManualEntry),
 );
 submissionsRouter.get(
+  "/status/:referenceCode",
+  asyncHandler(submissionsController.getPublicStatus),
+);
+submissionsRouter.get(
   "/pending",
   requireAuth,
   requireAdmin,

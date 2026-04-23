@@ -63,6 +63,7 @@ export function serializePriceSubmissionBatch(
 ) {
   return {
     id: batch.id,
+    publicReferenceCode: batch.publicReferenceCode,
     fileName: batch.fileName,
     submitterName: batch.submitterName,
     submitterEmail: batch.submitterEmail,

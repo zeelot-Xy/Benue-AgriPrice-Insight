@@ -6,6 +6,7 @@ import {
   publicPriceUploadSchema,
   rejectSubmissionSchema,
   submissionIdParamSchema,
+  submissionReferenceCodeParamSchema,
 } from "./submissions.schemas.js";
 import { submissionsService } from "./submissions.service.js";
 
@@ -25,6 +26,12 @@ export const submissionsController = {
   async listPending(req: Request, res: Response) {
     const query = listPendingSubmissionsQuerySchema.parse(req.query);
     const result = await submissionsService.listPending(query.limit);
+    res.json(result);
+  },
+
+  async getPublicStatus(req: Request, res: Response) {
+    const { referenceCode } = submissionReferenceCodeParamSchema.parse(req.params);
+    const result = await submissionsService.getPublicStatus(referenceCode);
     res.json(result);
   },
 

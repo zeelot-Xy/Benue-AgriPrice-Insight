@@ -9,6 +9,7 @@ import { useAnalyticsData } from "../hooks/use-phase9-data";
 export function AnalyticsPage() {
   const { data, isLoading } = useAnalyticsData();
   const [activeCommodityIndex, setActiveCommodityIndex] = useState(0);
+  const [selectedContextCommodity, setSelectedContextCommodity] = useState("ALL");
   const commodityColors = useMemo(
     () => ({
       yam: "#0f3a2f",
@@ -44,6 +45,7 @@ export function AnalyticsPage() {
       <QueryState
         title="Loading Analytics"
         description="Loading alerts, seasonal patterns, and recent price movement."
+        guidance="You can still browse the dashboard and markets pages while analytics load."
       />
     );
   }
@@ -52,7 +54,9 @@ export function AnalyticsPage() {
     return (
       <QueryState
         title="Analytics Unavailable"
-        description="Analytics information is not available right now."
+        description="Analytics are temporarily unavailable."
+        guidance="You can still browse the public pages or try again in a moment."
+        tone="warning"
       />
     );
   }
@@ -119,6 +123,9 @@ export function AnalyticsPage() {
             </AreaChart>
           </ResponsiveContainer>
         </div>
+        <p className="mt-4 rounded-[1.2rem] bg-bapi-mint/16 px-4 py-3 text-sm leading-6 text-bapi-evergreen/72">
+          This chart rotates through commodities every 15 seconds so non-technical users can see weekly movement one commodity at a time without an overcrowded chart.
+        </p>
       </SectionCard>
 
       <div className="grid gap-4 xl:grid-cols-[1.1fr_1fr]">
@@ -127,8 +134,29 @@ export function AnalyticsPage() {
           title="Severity and reasoning cards"
           description="Each alert shows the size of the change and explains why it matters."
         >
+          <div className="mb-4 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setSelectedContextCommodity("ALL")}
+              className={["rounded-full px-4 py-2 text-sm font-semibold", selectedContextCommodity === "ALL" ? "bg-bapi-evergreen text-white" : "bg-white/60 text-bapi-evergreen/72"].join(" ")}
+            >
+              All commodities
+            </button>
+            {data.commodityOptions.map((commodity) => (
+              <button
+                key={commodity.slug}
+                type="button"
+                onClick={() => setSelectedContextCommodity(commodity.slug)}
+                className={["rounded-full px-4 py-2 text-sm font-semibold", selectedContextCommodity === commodity.slug ? "bg-bapi-evergreen text-white" : "bg-white/60 text-bapi-evergreen/72"].join(" ")}
+              >
+                {commodity.name}
+              </button>
+            ))}
+          </div>
           <div className="grid gap-3">
-            {data.alerts.map((alert) => (
+            {data.alerts
+              .filter((alert) => selectedContextCommodity === "ALL" || alert.commoditySlug === selectedContextCommodity)
+              .map((alert) => (
               <article key={`${alert.commodity}-${alert.market}`} className="rounded-[1.5rem] border border-white/55 bg-white/62 p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
@@ -141,6 +169,9 @@ export function AnalyticsPage() {
               </article>
             ))}
           </div>
+          <p className="mt-4 rounded-[1.2rem] bg-white/60 px-4 py-3 text-sm leading-6 text-bapi-evergreen/68">
+            Alerts explain whether prices are moving upward, downward, or staying stable enough to watch.
+          </p>
         </SectionCard>
 
         <SectionCard
@@ -149,7 +180,13 @@ export function AnalyticsPage() {
           description={`${data.note} Each note explains the chart in plain language.`}
         >
           <div className="grid gap-3">
-            {data.seasonalityInsights.map((item) => (
+            {data.seasonalityInsights
+              .filter(
+                (item) =>
+                  selectedContextCommodity === "ALL" ||
+                  ("commoditySlug" in item && item.commoditySlug === selectedContextCommodity),
+              )
+              .map((item) => (
               <article key={`${item.commodity}-${item.month}`} className="rounded-[1.5rem] border border-white/55 bg-white/62 p-4">
                 <div className="flex items-center justify-between gap-3">
                   <h3 className="font-semibold text-bapi-evergreen">{item.commodity}</h3>
@@ -159,6 +196,9 @@ export function AnalyticsPage() {
               </article>
             ))}
           </div>
+          <p className="mt-4 rounded-[1.2rem] bg-bapi-mint/16 px-4 py-3 text-sm leading-6 text-bapi-evergreen/72">
+            Seasonality cards summarize the typical monthly pattern so users can understand what usually happens before comparing it with current weeks.
+          </p>
         </SectionCard>
       </div>
 
@@ -178,6 +218,9 @@ export function AnalyticsPage() {
             </BarChart>
           </ResponsiveContainer>
         </div>
+        <p className="mt-4 rounded-[1.2rem] bg-white/60 px-4 py-3 text-sm leading-6 text-bapi-evergreen/68">
+          Official statistics are based on approved submissions and validated admin records.
+        </p>
       </SectionCard>
     </div>
   );

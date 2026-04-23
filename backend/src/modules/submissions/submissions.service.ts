@@ -1,7 +1,7 @@
 import { HttpError } from "../../lib/http-error.js";
 import { prisma } from "../../lib/prisma.js";
 import { parseCsvContent } from "../../utils/csv.js";
-import { parseDateOnly } from "../../utils/date.js";
+import { parseDateOnly, toDateOnly } from "../../utils/date.js";
 import { serializePriceSubmissionBatch } from "../../utils/serializers.js";
 
 const SUBMISSION_STATUS = {
@@ -9,6 +9,8 @@ const SUBMISSION_STATUS = {
   APPROVED: "APPROVED",
   REJECTED: "REJECTED",
 } as const;
+
+type SubmissionStatus = (typeof SUBMISSION_STATUS)[keyof typeof SUBMISSION_STATUS];
 
 type PublicUploadInput = {
   fileName: string;
@@ -44,6 +46,10 @@ type ResolvedSubmissionRow = {
   sourceNote: string | null;
 };
 
+type SubmissionBatchWithContext = Awaited<
+  ReturnType<typeof fetchSubmissionBatchWithContext>
+>;
+
 function assertDateOnly(value: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
     throw new Error("Dates must use YYYY-MM-DD format.");
@@ -68,6 +74,39 @@ function assertPriceValue(value: string) {
   return parsed;
 }
 
+function getPublicStatusMeta(status: SubmissionStatus) {
+  switch (status) {
+    case SUBMISSION_STATUS.APPROVED:
+      return {
+        label: "Approved",
+        description:
+          "This submission has been accepted into the official market dataset.",
+      };
+    case SUBMISSION_STATUS.REJECTED:
+      return {
+        label: "Rejected",
+        description:
+          "This submission was reviewed but was not added to the official market dataset.",
+      };
+    case SUBMISSION_STATUS.PENDING:
+    default:
+      return {
+        label: "Under review",
+        description:
+          "This submission has been received and is waiting for administrator review.",
+      };
+  }
+}
+
+function formatReferenceCode(id: number) {
+  const today = new Date().toISOString().slice(0, 10).replaceAll("-", "");
+  return `BAPI-${today}-${String(id).padStart(4, "0")}`;
+}
+
+function temporaryReferenceCode() {
+  return `BAPI-TMP-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+}
+
 async function resolveApprovedScope() {
   const [markets, commodities] = await Promise.all([
     prisma.market.findMany({ where: { isActive: true } }),
@@ -82,6 +121,162 @@ async function resolveApprovedScope() {
   };
 }
 
+async function fetchSubmissionBatchWithContext(id: number) {
+  const batch = await prisma.priceSubmissionBatch.findUnique({
+    where: { id },
+    include: {
+      reviewedBy: true,
+      rows: {
+        orderBy: { id: "asc" },
+        include: {
+          market: true,
+          commodity: true,
+        },
+      },
+    },
+  });
+
+  if (!batch) {
+    throw new HttpError(404, "Submission batch not found.");
+  }
+
+  const previewRows = batch.rows.slice(0, 5);
+  const matchKeys = previewRows.map((row) => ({
+    marketId: row.marketId,
+    commodityId: row.commodityId,
+    priceDate: row.priceDate,
+    unit: row.unit,
+  }));
+
+  const officialMatches = matchKeys.length
+    ? await Promise.all(
+        matchKeys.map((key) =>
+          prisma.priceRecord.findUnique({
+            where: {
+              marketId_commodityId_priceDate_unit: {
+                marketId: key.marketId,
+                commodityId: key.commodityId,
+                priceDate: key.priceDate,
+                unit: key.unit,
+              },
+            },
+            include: {
+              market: true,
+              commodity: true,
+            },
+          }),
+        ),
+      )
+    : [];
+
+  const existingKeys = new Set<string>();
+
+  if (batch.rows.length) {
+    const groupedWhere = batch.rows.map((row) => ({
+      marketId: row.marketId,
+      commodityId: row.commodityId,
+      priceDate: row.priceDate,
+      unit: row.unit,
+    }));
+
+    const existingRecords = await prisma.priceRecord.findMany({
+      where: {
+        OR: groupedWhere,
+      },
+      select: {
+        marketId: true,
+        commodityId: true,
+        priceDate: true,
+        unit: true,
+      },
+    });
+
+    for (const record of existingRecords) {
+      existingKeys.add(
+        `${record.marketId}:${record.commodityId}:${toDateOnly(record.priceDate)}:${record.unit}`,
+      );
+    }
+  }
+
+  return {
+    batch,
+    officialMatches,
+    existingKeys,
+  };
+}
+
+function buildSubmissionResponse(context: SubmissionBatchWithContext) {
+  const { batch, officialMatches, existingKeys } = context;
+  const serialized = serializePriceSubmissionBatch(batch);
+
+  const affectedMarkets = Array.from(
+    new Map(
+      batch.rows.map((row) => [
+        row.marketId,
+        {
+          id: row.marketId,
+          code: row.market?.code ?? row.marketCode,
+          name: row.market?.name ?? row.marketCode,
+        },
+      ]),
+    ).values(),
+  );
+
+  const affectedCommodities = Array.from(
+    new Map(
+      batch.rows.map((row) => [
+        row.commodityId,
+        {
+          id: row.commodityId,
+          slug: row.commodity?.slug ?? row.commoditySlug,
+          name: row.commodity?.name ?? row.commoditySlug,
+        },
+      ]),
+    ).values(),
+  );
+
+  const previewRows = serialized.rows.slice(0, 5).map((row, index) => {
+    const match = officialMatches[index];
+
+    return {
+      ...row,
+      currentOfficialValue: match
+        ? {
+            id: match.id,
+            priceDate: toDateOnly(match.priceDate),
+            price: Number(match.price),
+            unit: match.unit,
+            sourceNote: match.sourceNote,
+          }
+        : null,
+    };
+  });
+
+  let updated = 0;
+  let created = 0;
+
+  for (const row of batch.rows) {
+    const rowKey = `${row.marketId}:${row.commodityId}:${toDateOnly(row.priceDate)}:${row.unit}`;
+
+    if (existingKeys.has(rowKey)) {
+      updated += 1;
+    } else {
+      created += 1;
+    }
+  }
+
+  return {
+    ...serialized,
+    affectedMarkets,
+    affectedCommodities,
+    previewRows,
+    impactSummary: {
+      created,
+      updated,
+    },
+  };
+}
+
 async function createSubmissionBatch(input: {
   fileName: string;
   submitterName?: string | null;
@@ -90,8 +285,9 @@ async function createSubmissionBatch(input: {
   validRows: ResolvedSubmissionRow[];
   failures: Array<{ rowNumber: number; reason: string }>;
 }) {
-  const batch = await prisma.priceSubmissionBatch.create({
+  const createdBatch = await prisma.priceSubmissionBatch.create({
     data: {
+      publicReferenceCode: temporaryReferenceCode(),
       fileName: input.fileName,
       submitterName: input.submitterName?.trim() || null,
       submitterEmail: input.submitterEmail?.trim() || null,
@@ -111,21 +307,24 @@ async function createSubmissionBatch(input: {
         })),
       },
     },
-    include: {
-      rows: {
-        include: {
-          market: true,
-          commodity: true,
-        },
-      },
+    select: {
+      id: true,
     },
   });
 
+  await prisma.priceSubmissionBatch.update({
+    where: { id: createdBatch.id },
+    data: {
+      publicReferenceCode: formatReferenceCode(createdBatch.id),
+    },
+  });
+
+  const context = await fetchSubmissionBatchWithContext(createdBatch.id);
+
   return {
-    batch: serializePriceSubmissionBatch(batch),
+    batch: buildSubmissionResponse(context),
     failures: input.failures,
-    message:
-      "Your submission has been received and placed in the review queue. It will not affect statistics until an admin approves it.",
+    message: `Submission received. Reference code ${context.batch.publicReferenceCode}. Your submission is now under admin review.`,
   };
 }
 
@@ -138,7 +337,6 @@ export const submissionsService = {
     }
 
     const { marketByCode, commodityBySlug } = await resolveApprovedScope();
-
     const failures: Array<{ rowNumber: number; reason: string }> = [];
     const validRows: ResolvedSubmissionRow[] = [];
 
@@ -174,7 +372,8 @@ export const submissionsService = {
       } catch (error) {
         failures.push({
           rowNumber: index + 2,
-          reason: error instanceof Error ? error.message : "Unknown validation error.",
+          reason:
+            error instanceof Error ? error.message : "Unknown validation error.",
         });
       }
     }
@@ -233,7 +432,8 @@ export const submissionsService = {
       } catch (error) {
         failures.push({
           rowNumber: index + 1,
-          reason: error instanceof Error ? error.message : "Unknown validation error.",
+          reason:
+            error instanceof Error ? error.message : "Unknown validation error.",
         });
       }
     }
@@ -255,26 +455,54 @@ export const submissionsService = {
     });
   },
 
+  async getPublicStatus(referenceCode: string) {
+    const batch = await prisma.priceSubmissionBatch.findUnique({
+      where: { publicReferenceCode: referenceCode.trim().toUpperCase() },
+    });
+
+    if (!batch) {
+      throw new HttpError(
+        404,
+        "No submission was found for that reference code. Check the code and try again.",
+      );
+    }
+
+    const meta = getPublicStatusMeta(batch.status as SubmissionStatus);
+
+    return {
+      referenceCode: batch.publicReferenceCode,
+      status: batch.status,
+      statusLabel: meta.label,
+      statusDescription: meta.description,
+      fileName: batch.fileName,
+      submittedAt: batch.createdAt.toISOString(),
+      reviewedAt: batch.reviewedAt?.toISOString() ?? null,
+      totalRows: batch.totalRows,
+      acceptedRows: batch.validRows,
+      excludedRows: batch.invalidRows,
+      reviewNote: batch.reviewNote,
+    };
+  },
+
   async listPending(limit: number) {
-    const items = await prisma.priceSubmissionBatch.findMany({
+    const batches = await prisma.priceSubmissionBatch.findMany({
       where: { status: SUBMISSION_STATUS.PENDING },
-      include: {
-        rows: {
-          take: 5,
-          orderBy: { id: "asc" },
-          include: {
-            market: true,
-            commodity: true,
-          },
-        },
+      select: {
+        id: true,
       },
       orderBy: { createdAt: "desc" },
       take: limit,
     });
 
+    const items = await Promise.all(
+      batches.map(async (item) =>
+        buildSubmissionResponse(await fetchSubmissionBatchWithContext(item.id)),
+      ),
+    );
+
     return {
       count: items.length,
-      items: items.map(serializePriceSubmissionBatch),
+      items,
     };
   },
 
@@ -291,7 +519,10 @@ export const submissionsService = {
     }
 
     if (batch.status !== SUBMISSION_STATUS.PENDING) {
-      throw new HttpError(400, "Only pending submission batches can be approved.");
+      throw new HttpError(
+        400,
+        "Only pending submission batches can be approved.",
+      );
     }
 
     let created = 0;
@@ -341,32 +572,26 @@ export const submissionsService = {
       }
     }
 
-    const reviewedBatch = await prisma.priceSubmissionBatch.update({
+    await prisma.priceSubmissionBatch.update({
       where: { id: batch.id },
       data: {
         status: SUBMISSION_STATUS.APPROVED,
         reviewedById,
         reviewedAt: new Date(),
       },
-      include: {
-        reviewedBy: true,
-        rows: {
-          include: {
-            market: true,
-            commodity: true,
-          },
-        },
-      },
     });
 
+    const reviewed = buildSubmissionResponse(
+      await fetchSubmissionBatchWithContext(batch.id),
+    );
+
     return {
-      batch: serializePriceSubmissionBatch(reviewedBatch),
+      batch: reviewed,
       appliedRows: {
         created,
         updated,
       },
-      message:
-        "The submission batch has been approved and the validated records are now part of the monitored dataset.",
+      message: `${created + updated} records approved and added to official market data.`,
     };
   },
 
@@ -380,10 +605,13 @@ export const submissionsService = {
     }
 
     if (batch.status !== SUBMISSION_STATUS.PENDING) {
-      throw new HttpError(400, "Only pending submission batches can be rejected.");
+      throw new HttpError(
+        400,
+        "Only pending submission batches can be rejected.",
+      );
     }
 
-    const reviewedBatch = await prisma.priceSubmissionBatch.update({
+    await prisma.priceSubmissionBatch.update({
       where: { id: batch.id },
       data: {
         status: SUBMISSION_STATUS.REJECTED,
@@ -391,23 +619,17 @@ export const submissionsService = {
         reviewedAt: new Date(),
         reviewNote:
           reviewNote?.trim() ||
-          "Submission rejected during review. The records were not added to the monitored dataset.",
-      },
-      include: {
-        reviewedBy: true,
-        rows: {
-          include: {
-            market: true,
-            commodity: true,
-          },
-        },
+          "Submission rejected during review. The records were not added to the official market dataset.",
       },
     });
 
+    const reviewed = buildSubmissionResponse(
+      await fetchSubmissionBatchWithContext(batch.id),
+    );
+
     return {
-      batch: serializePriceSubmissionBatch(reviewedBatch),
-      message:
-        "The submission batch has been rejected and remains excluded from dashboard statistics and analytics.",
+      batch: reviewed,
+      message: "Submission rejected. No official statistics were changed.",
     };
   },
 };
