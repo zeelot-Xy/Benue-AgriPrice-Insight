@@ -1,3 +1,5 @@
+import type { Commodity, Market } from "@prisma/client";
+
 import { HttpError } from "../../lib/http-error.js";
 import { prisma } from "../../lib/prisma.js";
 import { parseCsvContent } from "../../utils/csv.js";
@@ -114,10 +116,12 @@ async function resolveApprovedScope() {
   ]);
 
   return {
-    marketByCode: new Map(markets.map((market) => [market.code, market])),
-    commodityBySlug: new Map(
-      commodities.map((commodity) => [commodity.slug, commodity]),
+    marketByCode: new Map<string, Market>(
+      markets.map((market: Market) => [market.code, market]),
     ),
+    commodityBySlug: new Map(
+      commodities.map((commodity: Commodity) => [commodity.slug, commodity]),
+    ) as Map<string, Commodity>,
   };
 }
 
@@ -141,7 +145,7 @@ async function fetchSubmissionBatchWithContext(id: number) {
   }
 
   const previewRows = batch.rows.slice(0, 5);
-  const matchKeys = previewRows.map((row) => ({
+  const matchKeys = previewRows.map((row: (typeof batch.rows)[number]) => ({
     marketId: row.marketId,
     commodityId: row.commodityId,
     priceDate: row.priceDate,
@@ -150,7 +154,7 @@ async function fetchSubmissionBatchWithContext(id: number) {
 
   const officialMatches = matchKeys.length
     ? await Promise.all(
-        matchKeys.map((key) =>
+        matchKeys.map((key: (typeof matchKeys)[number]) =>
           prisma.priceRecord.findUnique({
             where: {
               marketId_commodityId_priceDate_unit: {
@@ -172,7 +176,7 @@ async function fetchSubmissionBatchWithContext(id: number) {
   const existingKeys = new Set<string>();
 
   if (batch.rows.length) {
-    const groupedWhere = batch.rows.map((row) => ({
+    const groupedWhere = batch.rows.map((row: (typeof batch.rows)[number]) => ({
       marketId: row.marketId,
       commodityId: row.commodityId,
       priceDate: row.priceDate,
@@ -211,7 +215,7 @@ function buildSubmissionResponse(context: SubmissionBatchWithContext) {
 
   const affectedMarkets = Array.from(
     new Map(
-      batch.rows.map((row) => [
+      batch.rows.map((row: (typeof batch.rows)[number]) => [
         row.marketId,
         {
           id: row.marketId,
@@ -224,7 +228,7 @@ function buildSubmissionResponse(context: SubmissionBatchWithContext) {
 
   const affectedCommodities = Array.from(
     new Map(
-      batch.rows.map((row) => [
+      batch.rows.map((row: (typeof batch.rows)[number]) => [
         row.commodityId,
         {
           id: row.commodityId,
@@ -235,7 +239,7 @@ function buildSubmissionResponse(context: SubmissionBatchWithContext) {
     ).values(),
   );
 
-  const previewRows = serialized.rows.slice(0, 5).map((row, index) => {
+  const previewRows = serialized.rows.slice(0, 5).map((row: (typeof serialized.rows)[number], index: number) => {
     const match = officialMatches[index];
 
     return {
@@ -285,7 +289,7 @@ async function createSubmissionBatch(input: {
   validRows: ResolvedSubmissionRow[];
   failures: Array<{ rowNumber: number; reason: string }>;
 }) {
-  const createdBatch = await prisma.priceSubmissionBatch.create({
+    const createdBatch: { id: number } = await prisma.priceSubmissionBatch.create({
     data: {
       publicReferenceCode: temporaryReferenceCode(),
       fileName: input.fileName,
@@ -485,7 +489,7 @@ export const submissionsService = {
   },
 
   async listPending(limit: number) {
-    const batches = await prisma.priceSubmissionBatch.findMany({
+    const batches: Array<{ id: number }> = await prisma.priceSubmissionBatch.findMany({
       where: { status: SUBMISSION_STATUS.PENDING },
       select: {
         id: true,
@@ -495,7 +499,7 @@ export const submissionsService = {
     });
 
     const items = await Promise.all(
-      batches.map(async (item) =>
+      batches.map(async (item: { id: number }) =>
         buildSubmissionResponse(await fetchSubmissionBatchWithContext(item.id)),
       ),
     );

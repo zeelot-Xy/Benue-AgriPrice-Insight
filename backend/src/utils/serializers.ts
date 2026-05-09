@@ -84,7 +84,7 @@ export function serializePriceSubmissionBatch(
         }
       : null,
     rows:
-      batch.rows?.map((row) => ({
+      batch.rows?.map((row: NonNullable<PriceSubmissionBatchWithRelations["rows"]>[number]) => ({
         id: row.id,
         marketId: row.marketId,
         commodityId: row.commodityId,

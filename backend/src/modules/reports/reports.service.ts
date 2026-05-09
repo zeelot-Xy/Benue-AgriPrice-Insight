@@ -1,6 +1,7 @@
 import { analyticsService } from "../analytics/analytics.service.js";
 import { prisma } from "../../lib/prisma.js";
 import { averageDecimal, serializePriceRecord } from "../../utils/serializers.js";
+import type { PriceRecord } from "@prisma/client";
 
 export const reportsService = {
   async overview() {
@@ -34,7 +35,7 @@ export const reportsService = {
         });
 
     const items = await Promise.all(
-      latestByCommodity.map(async (entry) => {
+      latestByCommodity.map(async (entry: { commodityId: number }) => {
         const latestRecord = await prisma.priceRecord.findFirst({
           where: {
             commodityId: entry.commodityId,
@@ -69,7 +70,9 @@ export const reportsService = {
             slug: records[0]!.commodity.slug,
           },
           priceDate: latestRecord.priceDate.toISOString().slice(0, 10),
-          stateAveragePrice: averageDecimal(records.map((record) => record.price)),
+          stateAveragePrice: averageDecimal(
+            records.map((record: PriceRecord) => record.price),
+          ),
           entries: records.map(serializePriceRecord),
         };
       }),

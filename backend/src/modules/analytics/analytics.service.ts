@@ -244,7 +244,9 @@ export const analyticsService = {
 
     const highest = records[0]!;
     const lowest = records[records.length - 1]!;
-    const stateAveragePrice = averageDecimal(records.map((record) => record.price));
+    const stateAveragePrice = averageDecimal(
+      records.map((record: PriceRecordWithRelations) => record.price),
+    );
 
     return {
       commodity: {
@@ -267,7 +269,7 @@ export const analyticsService = {
         name: lowest.market.name,
         price: Number(lowest.price),
       },
-      rankings: records.map((record, index) => ({
+      rankings: records.map((record: PriceRecordWithRelations, index: number) => ({
         rank: index + 1,
         market: {
           id: record.market.id,
